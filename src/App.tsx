@@ -1,11 +1,15 @@
 import React from 'react';
-import GlobalStyle from './styles/global';
+import { TopBar } from './componnents/topBar';
+import { SideBar } from './componnents/sideBar';
+import './styles/global.css';
 
 function App() {
   return (
     <div className="App">
-      <GlobalStyle />
-      Hello World
+      <TopBar title="Controle de Estoque e Finanças" />
+      <SideBar title="Menu" />
+      <div id='content'>
+      </div>      
     </div>
   );
 }
