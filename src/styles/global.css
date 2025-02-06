@@ -63,7 +63,11 @@ button:disabled {
     cursor: not-allowed;
 }
 
-#content{
-    margin-top: 5vw;
-    margin-left: 15vw;
+#content {
+    margin-top: 5vw; /* Margem superior */
+    margin-left: 15vw; /* Margem esquerda */
+    margin-right: 1vw; /* Margem direita adicionada */
+    width: calc(100vw - 16vw); /* Largura total menos as margens laterais */
+    box-sizing: border-box; /* Garante que padding e bordas não aumentem o tamanho */
+    overflow: hidden; /* Evita que a tabela ultrapasse os limites */
 }
