@@ -1,11 +1,14 @@
+// src/components/TableTransactions/index.tsx
 import React from "react";
 import './styles.css';
+import { useTable } from "../../context/tableTransactionsContext";
 
-interface TableProps {
-    children: React.ReactNode;
-}
+export function TableTransactions() {
+    const { isOpen } = useTable();
 
-export function Table({ children }: TableProps) {
+    // Se a tabela não estiver aberta, retorna null
+    if (!isOpen) return null;
+
     return (
         <table>
             <thead>

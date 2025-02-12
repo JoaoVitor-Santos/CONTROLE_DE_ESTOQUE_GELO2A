@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import './styles.css';
-import { useModal } from "../../context/ModalContext";
+import { useModal } from "../../context/modalNewClientContext";
 
 Modal.setAppElement("#root"); 
 

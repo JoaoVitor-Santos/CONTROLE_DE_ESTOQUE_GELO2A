@@ -1,8 +1,9 @@
 import React from 'react';
 import { TopBar } from './components/TopBar';
 import { SideBar } from './components/SideBar';
-import { Table } from './components/Table';
-import { ModalProvider } from './context/ModalContext';
+import { TableTransactions } from './components/TableTransactions';
+import { ModalProvider } from './context/modalNewClientContext';
+import { TableProvider } from './context/tableTransactionsContext';
 import { ModalNewClient } from './components/ModalNewClient';
 import './styles/global.css';
 
@@ -16,7 +17,7 @@ function App() {
             <ModalNewClient />
 
             <div id='content'>
-                <Table children={<></>} />
+                <TableTransactions />
             </div>
         </div>
     );
@@ -25,7 +26,9 @@ function App() {
 export default function RootApp() {
     return (
         <ModalProvider>
-            <App />
+            <TableProvider>
+                <App />
+            </TableProvider>
         </ModalProvider>
     );
 }
