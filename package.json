@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.8.3",
     "@types/jest": "^26.0.24",
     "@types/node": "^12.20.28",
+    "axios": "^1.7.9",
     "miragejs": "^0.1.48",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

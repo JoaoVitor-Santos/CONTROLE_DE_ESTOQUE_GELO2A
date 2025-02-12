@@ -9,6 +9,7 @@ import { createServer, Model } from 'miragejs';
 createServer({
   models: {
     transaction: Model, // Modelo para transações
+    client: Model,
   },
 
   seeds(server) {
@@ -18,7 +19,7 @@ createServer({
           id: 1,
           date: '05/02/2025',
           day: 'Segunda-feira',
-          client: 'João da Silva',
+          client: 'João Gomes',
           route: 'Rota 01',
           product: 'Gelo',
           quantity: '50 kg',
@@ -38,6 +39,23 @@ createServer({
         },
       ],
     });
+
+    server.db.loadData({
+      clients: [ // Corrigido o nome da tabela para "clients"
+        {
+          id: 1,
+          name: 'João Gomes',
+          city: 'São Paulo',
+          balance: 1000,
+        },
+        {
+          id: 2,
+          name: 'Ana Oliveira',
+          city: 'Rio de Janeiro',
+          balance: 2000,
+        },
+      ],
+    });
   },
 
   routes() {
@@ -45,6 +63,12 @@ createServer({
     this.get('/transactions', () => {
       return {
         transactions: this.schema.all('transaction').models, // Retorna todas as transações
+      };
+    });
+
+    this.get('/clients', () => {
+      return {
+        clients: this.schema.all('client').models, // Retorna todos os clientes
       };
     });
   },

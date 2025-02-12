@@ -3,21 +3,21 @@ import { TopBar } from './components/TopBar';
 import { SideBar } from './components/SideBar';
 import { TableTransactions } from './components/TableTransactions';
 import { ModalProvider } from './context/modalNewClientContext';
-import { TableProvider } from './context/tableTransactionsContext';
+import { TableProvider, useTable } from './context/tableTransactionsContext';
 import { ModalNewClient } from './components/ModalNewClient';
 import './styles/global.css';
 
 function App() {
+    const { setIsOpen } = useTable(); // Obtendo a função setIsOpen
+
     return (
         <div className="App">
             <TopBar title="Controle de Estoque e Finanças" />
-            <SideBar title="Menu" />
-
-            {/* Renderiza o modal */}
+            {/* Passando setIsOpen para o SideBar */}
+            <SideBar title="Menu" setIsOpen={setIsOpen} />
             <ModalNewClient />
-
             <div id='content'>
-                <TableTransactions />
+                <TableTransactions /> {/* Renderiza a tabela com base no estado */}
             </div>
         </div>
     );

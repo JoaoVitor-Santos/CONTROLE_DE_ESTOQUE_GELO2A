@@ -1,13 +1,18 @@
-// src/components/TableTransactions/index.tsx
-import React from "react";
+import React, { useState } from "react"; // Certifique-se de importar useState
 import './styles.css';
 import { useTable } from "../../context/tableTransactionsContext";
 
+interface PropsTableTransactions {
+    isOpen: boolean;
+}
+
 export function TableTransactions() {
+    const { transactions } = useTable(); // Desestruture o objeto retornado pelo hook
     const { isOpen } = useTable();
 
-    // Se a tabela não estiver aberta, retorna null
-    if (!isOpen) return null;
+    if (!isOpen) {
+        return null; // Se a tabela não estiver aberta, retorna null
+    }
 
     return (
         <table>
@@ -24,26 +29,24 @@ export function TableTransactions() {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td data-label="Data">05/02/2025</td>
-                    <td data-label="Dia">Segunda-feira</td>
-                    <td data-label="Cliente">João da Silva</td>
-                    <td data-label="Rota">Rota 01</td>
-                    <td data-label="Produto">Gelo</td>
-                    <td data-label="Quantidade">50 kg</td>
-                    <td data-label="Valor">R$ 200,00</td>
-                    <td data-label="Vendedor">Carlos Souza</td>
-                </tr>
-                <tr>
-                    <td data-label="Data">06/02/2025</td>
-                    <td data-label="Dia">Terça-feira</td>
-                    <td data-label="Cliente">Ana Oliveira</td>
-                    <td data-label="Rota">Rota 02</td>
-                    <td data-label="Produto">Gelo</td>
-                    <td data-label="Quantidade">30 kg</td>
-                    <td data-label="Valor">R$ 120,00</td>
-                    <td data-label="Vendedor">Roberto Lima</td>
-                </tr>
+                {transactions.length > 0 ? (
+                    transactions.map((transaction) => (
+                        <tr key={transaction.id}>
+                            <td>{transaction.date}</td>
+                            <td>{transaction.day}</td>
+                            <td>{transaction.client}</td>
+                            <td>{transaction.route}</td>
+                            <td>{transaction.product}</td>
+                            <td>{transaction.quantity}</td>
+                            <td>{transaction.value}</td>
+                            <td>{transaction.seller}</td>
+                        </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan={8}>Nenhuma transação encontrada</td>
+                    </tr>
+                )}
             </tbody>
         </table>
     );

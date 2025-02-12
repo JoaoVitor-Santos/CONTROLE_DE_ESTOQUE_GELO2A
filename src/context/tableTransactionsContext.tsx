@@ -1,31 +1,66 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import { api } from "../services/api";
 
-interface TableContextProps {
-  isOpen: boolean;
-  openTable: () => void;
-  closeTable: () => void;
+// Interfaces
+interface Transaction {
+  id: number;
+  date: string;
+  day: string;
+  client: string;
+  route: string;
+  product: string;
+  quantity: string;
+  value: number;
+  seller: string;
 }
 
-const TableContext = createContext<TableContextProps | undefined>(undefined);
+type TransactionEntry = Omit<Transaction, "id">;
 
-export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface TransactionsContextData {
+  transactions: Transaction[];
+  createTransaction: (transaction: TransactionEntry) => Promise<void>;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface ProviderTransactionsProps {
+  children: React.ReactNode;
+}
+
+const TableContext = createContext<TransactionsContextData>({} as TransactionsContextData);
+
+// Provedor de Transações
+export const TableProvider: React.FC<ProviderTransactionsProps> = ({ children }) => {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
-  const openTable = () => setIsOpen(true);
-  const closeTable = () => setIsOpen(false);
+  // Carregar transações ao iniciar
+  useEffect(() => {
+    api.get("/transactions").then((response) => {
+      const data = response.data.transactions || [];
+      setTransactions(data);
+    });
+  }, []);
+
+  // Criar nova transação
+  async function createTransaction(transaction: TransactionEntry) {
+    const response = await api.post("/transactions", transaction);
+    const data = response.data.transaction;
+    setTransactions([...transactions, data]);
+  }
 
   return (
-    <TableContext.Provider value={{ isOpen, openTable, closeTable }}>
+    <TableContext.Provider value={{ transactions, createTransaction, isOpen, setIsOpen }}>
       {children}
     </TableContext.Provider>
   );
 };
 
 // Hook para usar o contexto
-export const useTable = () => {
+export function useTable(): TransactionsContextData {
   const context = useContext(TableContext);
   if (!context) {
-    throw new Error("useTable deve ser usado dentro de um TableProvider");
+    throw new Error("useTable must be used within a TableProvider");
   }
   return context;
-};
+}
