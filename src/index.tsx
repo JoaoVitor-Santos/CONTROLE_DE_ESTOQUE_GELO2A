@@ -45,13 +45,15 @@ createServer({
         {
           id: 1,
           name: 'João Gomes',
-          city: 'São Paulo',
+          address: 'Rua A, 123',
+          phone: '123456789',
           balance: 1000,
         },
         {
           id: 2,
           name: 'Ana Oliveira',
-          city: 'Rio de Janeiro',
+          address: 'Rua B, 456',
+          phone: '987654321',
           balance: 2000,
         },
       ],

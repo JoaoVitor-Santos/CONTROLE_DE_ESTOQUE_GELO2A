@@ -1,16 +1,13 @@
 import React, { useState } from "react"; // Certifique-se de importar useState
 import './styles.css';
-import { useTable } from "../../context/tableTransactionsContext";
+import { useTableTransactions } from "../../context/tableTransactionsContext";
 
-interface PropsTableTransactions {
-    isOpen: boolean;
-}
 
 export function TableTransactions() {
-    const { transactions } = useTable(); // Desestruture o objeto retornado pelo hook
-    const { isOpen } = useTable();
+    const { transactions } = useTableTransactions(); // Desestruture o objeto retornado pelo hook
+    const { isOpenTransactions } = useTableTransactions();
 
-    if (!isOpen) {
+    if (!isOpenTransactions) {
         return null; // Se a tabela não estiver aberta, retorna null
     }
 

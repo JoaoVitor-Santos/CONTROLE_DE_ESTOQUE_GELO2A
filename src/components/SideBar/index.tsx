@@ -4,24 +4,28 @@ import './styles.css';
 
 interface SideBarProps {
     title: string;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>; // Função para alterar o estado
+    setIsOpenTransactions: React.Dispatch<React.SetStateAction<boolean>>; // Função para alterar o estado
+    setIsOpenClients: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function SideBar({ title, setIsOpen }: SideBarProps) {
+export function SideBar({ title, setIsOpenTransactions, setIsOpenClients }: SideBarProps) {
 
     const handleListClients = () => {
         console.log("Listando clientes...");
-        setIsOpen(false); // Fecha a tabela ao listar clientes
+        setIsOpenTransactions(false); // Fecha a tabela ao listar clientes
+        setIsOpenClients(true);
     };
 
     const handleListProducts = () => {
         console.log("Listando produtos...");
-        setIsOpen(false); // Fecha a tabela ao listar produtos
+        setIsOpenTransactions(false); // Fecha a tabela ao listar produtos
+        setIsOpenClients(false);
     };
 
     const handleListTransactions = () => {
         console.log("Listando transações...");
-        setIsOpen(true); // Abre a tabela ao listar transações
+        setIsOpenTransactions(true); // Abre a tabela ao listar transações
+        setIsOpenClients(false);
     };
 
     return (

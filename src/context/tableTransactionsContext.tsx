@@ -19,8 +19,8 @@ type TransactionEntry = Omit<Transaction, "id">;
 interface TransactionsContextData {
   transactions: Transaction[];
   createTransaction: (transaction: TransactionEntry) => Promise<void>;
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpenTransactions: boolean;
+  setIsOpenTransactions: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface ProviderTransactionsProps {
@@ -30,9 +30,9 @@ interface ProviderTransactionsProps {
 const TableContext = createContext<TransactionsContextData>({} as TransactionsContextData);
 
 // Provedor de Transações
-export const TableProvider: React.FC<ProviderTransactionsProps> = ({ children }) => {
+export const TableTransactionsProvider: React.FC<ProviderTransactionsProps> = ({ children }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenTransactions, setIsOpenTransactions] = useState(false);
 
   // Carregar transações ao iniciar
   useEffect(() => {
@@ -50,14 +50,14 @@ export const TableProvider: React.FC<ProviderTransactionsProps> = ({ children })
   }
 
   return (
-    <TableContext.Provider value={{ transactions, createTransaction, isOpen, setIsOpen }}>
+    <TableContext.Provider value={{ transactions, createTransaction, isOpenTransactions, setIsOpenTransactions }}>
       {children}
     </TableContext.Provider>
   );
 };
 
 // Hook para usar o contexto
-export function useTable(): TransactionsContextData {
+export function useTableTransactions(): TransactionsContextData {
   const context = useContext(TableContext);
   if (!context) {
     throw new Error("useTable must be used within a TableProvider");
