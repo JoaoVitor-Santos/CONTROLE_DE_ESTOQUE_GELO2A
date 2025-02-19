@@ -59,3 +59,12 @@
     background-color: #3b6ac9;
     border-top: 1px solid #ffffff30;
 }
+
+#side-bar button.active {
+    background-color: #6cb2eb; /* Azul mais claro */
+    color: #ffffff; /* Texto branco */
+}
+
+#side-bar button.active .icon {
+    fill: #ffffff; /* Altera a cor do ícone para branco */
+}

@@ -1,40 +1,31 @@
 // src/context/ModalContext.tsx
 import React, { createContext, useState, useContext } from "react";
 
-interface ModalContextType {
+interface ModalNewClientContextType {
     isOpen: boolean;
-    openModal: () => void;
-    closeModal: () => void;
-    registerClient: (clientData: { name: string; email: string; phone: string }) => Promise<void>;
+    openModalNewClient: () => void;
+    closeModalNewClient: () => void;
 }
 
-const ModalContext = createContext<ModalContextType | undefined>(undefined);
+const ModalNewClientContext = createContext<ModalNewClientContextType | undefined>(undefined);
 
-export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ModalNewClientProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const openModal = () => setIsOpen(true);
-    const closeModal = () => setIsOpen(false);
+    const openModalNewClient = () => setIsOpen(true);
+    const closeModalNewClient = () => setIsOpen(false);
 
-    const registerClient = async (clientData: { name: string; email: string; phone: string }) => {
-        return new Promise<void>((resolve, reject) => {
-            setTimeout(() => {
-                console.log("Dados enviados para a API:", clientData); // Exibe os dados no console
-                alert(`Cliente cadastrado!\n\nNome: ${clientData.name}\nEmail: ${clientData.email}\nTelefone: ${clientData.phone}`);
-                resolve();
-            }, 1000); 
-        });
-    };
+
 
     return (
-        <ModalContext.Provider value={{ isOpen, openModal, closeModal, registerClient }}>
+        <ModalNewClientContext.Provider value={{ isOpen, openModalNewClient, closeModalNewClient }}>
             {children}
-        </ModalContext.Provider>
+        </ModalNewClientContext.Provider>
     );
 };
 
-export const useModal = () => {
-    const context = useContext(ModalContext);
+export const useModalNewClient = () => {
+    const context = useContext(ModalNewClientContext);
     if (!context) {
         throw new Error("useModal must be used within a ModalProvider");
     }
