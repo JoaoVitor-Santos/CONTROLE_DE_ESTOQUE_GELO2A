@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useModalNewClient } from "../../context/modalNewClientContext";
+import { useModalNewProduct } from "../../context/modalNewProductContext";
+import { useModalNewTransaction } from "../../context/modalNewTransactionContext";
 import './styles.css';
 
 interface SideBarProps {
@@ -13,6 +15,8 @@ export function SideBar({ title, setIsOpenTransactions, setIsOpenClients, setIsO
     // Estado para rastrear o botão ativo
     const [activeButton, setActiveButton] = useState<string | null>(null);
     const { openModalNewClient } = useModalNewClient();
+    const { openModalNewProduct } = useModalNewProduct();
+    const { openModalNewTransaction } = useModalNewTransaction();
 
     const handleListClients = () => {
         console.log("Listando clientes...");
@@ -53,6 +57,7 @@ export function SideBar({ title, setIsOpenTransactions, setIsOpenClients, setIsO
             </button>
             <button
                 id="registerProduct"
+                onClick={() => openModalNewProduct()}
                 className={activeButton === "registerProduct" ? "active" : ""}
             >
                 <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -95,6 +100,7 @@ export function SideBar({ title, setIsOpenTransactions, setIsOpenClients, setIsO
             </button>
             <button
                 id="registerTransaction"
+                onClick={() => openModalNewTransaction()}
                 className={activeButton === "registerTransaction" ? "active" : ""}
             >
                 <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

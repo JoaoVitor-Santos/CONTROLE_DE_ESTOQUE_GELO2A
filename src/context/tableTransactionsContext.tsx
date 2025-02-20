@@ -5,11 +5,10 @@ import { api } from "../services/api";
 interface Transaction {
   id: number;
   date: string;
-  day: string;
   client: string;
   route: string;
   product: string;
-  quantity: string;
+  quantity: number;
   value: number;
   seller: string;
 }

@@ -16,7 +16,6 @@ export function TableTransactions() {
             <thead>
                 <tr>
                     <th>Data</th>
-                    <th>Dia</th>
                     <th>Cliente</th>
                     <th>Rota</th>
                     <th>Produto</th>
@@ -30,7 +29,6 @@ export function TableTransactions() {
                     transactions.map((transaction) => (
                         <tr key={transaction.id}>
                             <td>{transaction.date}</td>
-                            <td>{transaction.day}</td>
                             <td>{transaction.client}</td>
                             <td>{transaction.route}</td>
                             <td>{transaction.product}</td>

@@ -19,7 +19,6 @@ createServer({
         {
           id: 1,
           date: '05/02/2025',
-          day: 'Segunda-feira',
           client: 'João Gomes',
           route: 'Rota 01',
           product: 'Gelo',
@@ -30,7 +29,6 @@ createServer({
         {
           id: 2,
           date: '06/02/2025',
-          day: 'Terça-feira',
           client: 'Ana Oliveira',
           route: 'Rota 02',
           product: 'Gelo',

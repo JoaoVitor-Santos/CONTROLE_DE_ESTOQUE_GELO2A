@@ -16,16 +16,31 @@ export function TableClients() {
                     <th>Nome</th>
                     <th>Telefone</th>
                     <th>Endereço</th>
+                    <th>Saldo</th>
                 </tr>
             </thead>
             <tbody>
-                {clients.map((client) => (
+            {clients.map((client) => {
+                // Função para formatar o saldo
+                const formatBalance = (balance: number): string => {
+                    if (balance > 0) {
+                        return `+ R$ ${balance.toFixed(2)}`; // Para valores positivos
+                    } else if (balance < 0) {
+                        return `- R$ ${Math.abs(balance).toFixed(2)}`; // Para valores negativos
+                    } else {
+                        return `R$ 0.00`; // Para saldo zero
+                    }
+                };
+
+                return (
                     <tr key={client.id}>
                         <td>{client.name}</td>
                         <td>{client.phone}</td>
                         <td>{client.address}</td>
+                        <td>{formatBalance(client.balance)}</td> {/* Usa a função para formatar */}
                     </tr>
-                ))}
+                );
+            })}
             </tbody>
         </table>
     );

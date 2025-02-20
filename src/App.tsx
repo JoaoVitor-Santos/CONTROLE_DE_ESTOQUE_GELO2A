@@ -5,10 +5,15 @@ import { TableTransactions } from './components/TableTransactions';
 import { TableClients } from './components/TableClients';
 import { TableProducts } from './components/TableProducts';
 import { ModalNewClientProvider } from './context/modalNewClientContext';
+import { ModalNewProductProvider } from './context/modalNewProductContext';
+import { ModalNewTransactionProvider } from './context/modalNewTransactionContext';
 import { TableTransactionsProvider, useTableTransactions } from './context/tableTransactionsContext';
 import { TableClientsProvider, useTableClients } from './context/tableClientsContext';
 import { TableProductsProvider, useTableProducts } from './context/tableProductsContext';
 import { ModalNewClient } from './components/ModalNewClient';
+import { ModalNewProduct } from './components/ModalNewProduct/ModalNewProduct';
+import { ModalNewTransaction } from './components/ModalNewTransaction';
+
 import './styles/global.css';
 
 function App() {
@@ -22,6 +27,8 @@ function App() {
             {/* Passando setIsOpen para o SideBar */}
             <SideBar title="Menu" setIsOpenTransactions={setIsOpenTransactions} setIsOpenClients={setIsOpenClients} setIsOpenProducts={setIsOpenProducts} />
             <ModalNewClient />
+            <ModalNewProduct />
+            <ModalNewTransaction />
             <div id='content'>
                 <TableTransactions /> {/* Renderiza a tabela com base no estado */}
                 <TableClients />
@@ -34,6 +41,8 @@ function App() {
 export default function RootApp() {
     return (
         <ModalNewClientProvider> 
+        <ModalNewProductProvider>
+        <ModalNewTransactionProvider>
             <TableTransactionsProvider>
                 <TableClientsProvider>
                     <TableProductsProvider>
@@ -41,6 +50,8 @@ export default function RootApp() {
                     </TableProductsProvider>
                 </TableClientsProvider>
             </TableTransactionsProvider>
+        </ModalNewTransactionProvider>
+        </ModalNewProductProvider>
         </ModalNewClientProvider>
     );
 }
