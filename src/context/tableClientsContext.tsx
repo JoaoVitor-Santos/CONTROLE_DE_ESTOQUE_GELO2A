@@ -8,6 +8,7 @@ interface Client {
     balance: number;
     phone: string;
     address: string;
+    city: string;
 }
 
 type ClientEntry = Omit<Client, "id">;

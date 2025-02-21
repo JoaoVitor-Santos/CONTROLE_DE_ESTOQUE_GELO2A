@@ -11,19 +11,26 @@ interface ModalProps {
 }
 
 export function ModalNewClient({ onConfirm }: ModalProps) {
-    const { isOpen, closeModalNewClient } = useModalNewClient();      
+    const { clients } = useTableClients(); // Use o hook useClients para obter os clientes
+    const { isOpen, closeModalNewClient } = useModalNewClient();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
     const [balance, setBalance] = useState<number | "">("");
+    const [city, setCity] = useState(""); // Estado para a cidade selecionada ou digitada
+    const [isCustomCity, setIsCustomCity] = useState(false); // Controla se o input personalizado está visível
+
     const { createClient } = useTableClients();
+
+    // Obter lista única de cidades dos clientes existentes
+    const uniqueCities = Array.from(new Set(clients.map((client) => client.city)));
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         // Validação básica
-        if (!name || !email || !phone || !address || balance === "") {
+        if (!name || !email || !phone || !address || balance === "" || !city) {
             alert("Preencha todos os campos!");
             return;
         }
@@ -36,6 +43,7 @@ export function ModalNewClient({ onConfirm }: ModalProps) {
                 phone,
                 address,
                 balance: Number(balance), // Convertendo para número
+                city,
             };
 
             // Chamar a função createClient do contexto
@@ -47,8 +55,8 @@ export function ModalNewClient({ onConfirm }: ModalProps) {
             setPhone("");
             setAddress("");
             setBalance("");
-
-            // Fechar o modal
+            setCity("");
+            setIsCustomCity(false); // Resetar o estado do input personalizado
             closeModalNewClient();
 
             // Executar callback opcional
@@ -125,6 +133,46 @@ export function ModalNewClient({ onConfirm }: ModalProps) {
                     onChange={(e) => setBalance(Number(e.target.value))}
                     placeholder="Digite o saldo do cliente"
                 />
+
+                <label htmlFor="city">Cidade:</label>
+                {!isCustomCity ? (
+                    <select
+                        id="city"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                    >
+                        <option value="">Selecione uma cidade</option>
+                        {uniqueCities.map((cityOption) => (
+                            <option key={cityOption} value={cityOption}>
+                                {cityOption}
+                            </option>
+                        ))}
+                        <option value="custom">Outra cidade...</option> {/* Opção para inserir cidade manualmente */}
+                    </select>
+                ) : (
+                    <input
+                        type="text"
+                        id="city-input"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        placeholder="Digite a cidade"
+                    />
+                )}
+
+                {city === "custom" && (
+                    <div className="city-actions">
+                        <button
+                            id="add-custom-city-new-client"
+                            type="button"
+                            onClick={() => {
+                                setIsCustomCity(true);
+                                setCity(""); // Limpa o valor do estado city
+                            }}
+                        >
+                            Inserir Cidade Manualmente
+                        </button>
+                    </div>
+                )}
 
                 <div className="modal-footer">
                     <button type="button" className="cancel" onClick={closeModalNewClient}>

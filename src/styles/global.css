@@ -64,7 +64,7 @@ button:disabled {
 }
 
 #content {
-    margin-top: 5vw; /* Margem superior */
+    margin-top: 20px; /* Margem superior */
     margin-left: 15vw; /* Margem esquerda */
     margin-right: 1vw; /* Margem direita adicionada */
     width: calc(100vw - 16vw); /* Largura total menos as margens laterais */

@@ -9,6 +9,7 @@ import { useTableProducts } from "../../context/tableProductsContext";
 Modal.setAppElement("#root");
 
 export function ModalNewTransaction() {
+    const { transactions } = useTableTransactions();
     const { isOpen, closeModalNewTransaction } = useModalNewTransaction();
     const { createTransaction } = useTableTransactions();
     const { clients } = useTableClients();
@@ -25,15 +26,15 @@ export function ModalNewTransaction() {
 
     const [date, setDate] = useState(getCurrentDate());
     const [client, setClient] = useState("");
-    const [route, setRoute] = useState("");
     const [product, setProduct] = useState("");
+    const [city, setCity] = useState(""); // Estado para a cidade selecionada ou digitada
     const [quantity, setQuantity] = useState<number | "">("");
     const [value, setValue] = useState<number | "">("");
     const [seller, setSeller] = useState("");
 
     // Função para criar uma nova transação
     const handleCreateTransaction = async () => {
-        if (!client || !product || quantity === "" || value === "") {
+        if (!client || !product || quantity === "" || value === "" || !city) {
             alert("Por favor, preencha todos os campos obrigatórios.");
             return;
         }
@@ -41,7 +42,7 @@ export function ModalNewTransaction() {
             await createTransaction({
                 date,
                 client,
-                route,
+                city,
                 product,
                 quantity,
                 value,
@@ -56,7 +57,7 @@ export function ModalNewTransaction() {
 
     return (
         <Modal
-            id="modal-new-transaction" // Adicionando o ID aqui
+            id="modal-new-transaction"
             isOpen={isOpen}
             onRequestClose={closeModalNewTransaction}
             contentLabel="Nova Transação"
@@ -92,14 +93,32 @@ export function ModalNewTransaction() {
                     ))}
                 </select>
 
-                <label htmlFor="route">Rota:</label>
-                <input
-                    type="text"
-                    id="route"
-                    value={route}
-                    onChange={(e) => setRoute(e.target.value)}
-                    placeholder="Digite a rota"
-                />
+                <label htmlFor="city">Cidade:</label>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                    {/* Campo de seleção para cidades */}
+                    <select
+                        id="city-select"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        style={{ marginBottom: "10px" }}
+                    >
+                        <option value="">Selecione uma cidade</option>
+                        {transactions.map((transaction) => (
+                            <option key={transaction.id} value={transaction.city}>
+                                {transaction.city}
+                            </option>
+                        ))}
+                    </select>
+
+                    {/* Campo de entrada para cidade manual */}
+                    <input
+                        type="text"
+                        id="city-input"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        placeholder="Digite a cidade se não encontrada"
+                    />
+                </div>
 
                 <label htmlFor="product">Produto:</label>
                 <select

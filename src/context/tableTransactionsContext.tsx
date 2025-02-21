@@ -6,7 +6,7 @@ interface Transaction {
   id: number;
   date: string;
   client: string;
-  route: string;
+  city: string;
   product: string;
   quantity: number;
   value: number;

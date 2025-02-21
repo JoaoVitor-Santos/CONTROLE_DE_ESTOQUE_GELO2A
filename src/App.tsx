@@ -46,7 +46,7 @@ export default function RootApp() {
             <TableTransactionsProvider>
                 <TableClientsProvider>
                     <TableProductsProvider>
-                    <App />
+                            <App />
                     </TableProductsProvider>
                 </TableClientsProvider>
             </TableTransactionsProvider>

@@ -42,6 +42,12 @@ export function SideBar({ title, setIsOpenTransactions, setIsOpenClients, setIsO
         setActiveButton("listTransactions"); // Define o botão "Listar Transações" como ativo
     };
 
+    const handleFinanceControl = () => {
+        setIsOpenClients(false);
+        setIsOpenProducts(false);
+        setIsOpenTransactions(false);
+        setActiveButton("financeControl"); // Define o botão "Controle Financeiro" como ativo
+    };
     return (
         <div id="side-bar">
             <h1>{title}</h1>
@@ -107,6 +113,16 @@ export function SideBar({ title, setIsOpenTransactions, setIsOpenClients, setIsO
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v5h-2zm-1 8h2v2h-2z" />
                 </svg>
                 Cadastrar Transação
+            </button>
+            <button
+                id="financeControl"
+                onClick={handleFinanceControl}
+                className={activeButton === "financeControl" ? "active" : ""}
+            >
+                <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v5h-2zm-1 8h2v2h-2z" />
+                </svg>
+                Controle Financeiro
             </button>
             <footer>
                 &copy; 2023 Controle de Estoque

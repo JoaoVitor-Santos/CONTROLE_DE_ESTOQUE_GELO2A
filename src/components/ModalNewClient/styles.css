@@ -92,6 +92,28 @@
     gap: 10px;
 }
 
+.city-actions {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente, se necessário */
+    margin-bottom: 10px;
+}
+
+#add-custom-city-new-client {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #4674cc; /* Cor de fundo personalizada */
+    color: #ffffff; /* Cor do texto */
+}
+
+#add-custom-city-new-client:hover {
+    background-color: #3b6ac9; /* Altera a cor ao passar o mouse */
+}
+
 .modal-footer button {
     padding: 10px 20px;
     border: none;
