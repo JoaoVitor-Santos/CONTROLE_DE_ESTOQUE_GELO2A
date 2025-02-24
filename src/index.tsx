@@ -8,14 +8,15 @@ import { createServer, Model } from 'miragejs';
 // Criando o servidor com MirageJS
 createServer({
   models: {
-    transaction: Model, // Modelo para transações
+    sale: Model, // Modelo para vendas
     client: Model,
     product: Model,
+    spent: Model,
   },
 
   seeds(server) {
     server.db.loadData({
-      transactions: [ // Corrigido o nome da tabela para "transactions"
+      sales: [ // Corrigido o nome da tabela para "sales"
         {
           id: 1,
           date: '05/01/2025',
@@ -40,7 +41,7 @@ createServer({
     });
 
     server.db.loadData({
-      clients: [ // Corrigido o nome da tabela para "clients"
+      clients: [ // Nome da tabela "clients" mantido
         {
           id: 1,
           name: 'João Vitor',
@@ -61,7 +62,7 @@ createServer({
     });
 
     server.db.loadData({
-      products: [ // Corrigido o nome da tabela para "clients"
+      products: [ // Nome da tabela "products" mantido
         {
           id: 1,
           name: 'Gelo',
@@ -78,20 +79,52 @@ createServer({
         },
       ],
     });
+
+    server.db.loadData({
+      spents: [
+        {
+          id: 1,
+          date: '05/01/2025',
+          cust: '200',
+          name: 'Picole',
+          description: 'Custo de producao',
+          type: 'Producao',
+        },
+        {
+          id: 2,
+          date: '06/02/2025',
+          cust: '120',
+          name: 'Equipamento',
+          description: 'Nova maquina de enformar',
+          type: 'Eventual',
+        },
+      ]
+    });
     
   },
 
   routes() {
     this.namespace = 'api'; // Definindo o namespace para a API
-    this.get('/transactions', () => {
+    this.get('/sales', () => {
       return {
-        transactions: this.schema.all('transaction').models, // Retorna todas as transações
+        sales: this.schema.all('sale').models, // Retorna todas as vendas
       };
     });
 
-    this.post('/transactions', (schema, request) => {
+    this.post('/sales', (schema, request) => {
       const data = JSON.parse(request.requestBody); // Obtenha o corpo da solicitação
-      return schema.create('transaction', data); // Crie uma nova transação com os dados fornecidos
+      return schema.create('sale', data); // Crie uma nova venda com os dados fornecidos
+    });
+
+    this.get('/spents', () => {
+      return {
+        spents: this.schema.all('spent').models, // Retorna todos os gastos
+      };
+    });
+
+    this.post('/spents', (schema, request) => {
+      const data = JSON.parse(request.requestBody); // Obtenha o corpo da solicitação
+      return schema.create('spent', data); // Crie um novo gasto com os dados fornecidos
     });
 
     this.get('/clients', () => {

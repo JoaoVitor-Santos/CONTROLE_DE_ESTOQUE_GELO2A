@@ -1,7 +1,7 @@
 import React from "react";
 import './styles.css';
 import { useFinanceControl } from "../../context/FinanceControlContext";
-import { useTableTransactions } from "../../context/tableTransactionsContext";
+import { useTableSales } from "../../context/tableSalesContext";
 
 export function FinanceControl() {
     const { isOpenFinanceControl, setIsOpenFinanceControl } = useFinanceControl();

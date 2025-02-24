@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import './styles.css';
-import { useTableTransactions } from "../../context/tableTransactionsContext";
+import { useTableSales } from "../../context/tableSalesContext";
 
-export function TableTransactions() {
-    const { transactions, isOpenTransactions } = useTableTransactions();
+export function TableSales() {
+    const { sales, isOpenSales } = useTableSales();
 
     // States for filters
     const [selectedCity, setSelectedCity] = useState<string>("");
@@ -16,24 +16,24 @@ export function TableTransactions() {
         return date.split("/")[1]; // Returns the month (second part of the date)
     };
 
-    // Filter transactions based on selected filters
-    const filteredTransactions = transactions.filter((transaction) => {
-        const matchesCity = selectedCity ? transaction.city === selectedCity : true;
-        const matchesProduct = selectedProduct ? transaction.product === selectedProduct : true;
-        const matchesMonth = selectedMonth ? extractMonth(transaction.date) === selectedMonth : true;
-        const matchesClient = selectedClient ? transaction.client === selectedClient : true;
+    // Filter sales based on selected filters
+    const filteredSales = sales.filter((sale) => {
+        const matchesCity = selectedCity ? sale.city === selectedCity : true;
+        const matchesProduct = selectedProduct ? sale.product === selectedProduct : true;
+        const matchesMonth = selectedMonth ? extractMonth(sale.date) === selectedMonth : true;
+        const matchesClient = selectedClient ? sale.client === selectedClient : true;
 
         return matchesCity && matchesProduct && matchesMonth && matchesClient;
     });
 
     // Get unique values for cities, products, months, and clients
-    const uniqueCities = Array.from(new Set(transactions.map((t) => t.city)));
-    const uniqueProducts = Array.from(new Set(transactions.map((t) => t.product)));
-    const uniqueMonths = Array.from(new Set(transactions.map((t) => extractMonth(t.date))));
-    const uniqueClients = Array.from(new Set(transactions.map((t) => t.client)));
+    const uniqueCities = Array.from(new Set(sales.map((s) => s.city)));
+    const uniqueProducts = Array.from(new Set(sales.map((s) => s.product)));
+    const uniqueMonths = Array.from(new Set(sales.map((s) => extractMonth(s.date))));
+    const uniqueClients = Array.from(new Set(sales.map((s) => s.client)));
 
     // Early return if the table is not open
-    if (!isOpenTransactions) {
+    if (!isOpenSales) {
         return null;
     }
 
@@ -124,21 +124,21 @@ export function TableTransactions() {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredTransactions.length > 0 ? (
-                        filteredTransactions.map((transaction) => (
-                            <tr key={transaction.id}>
-                                <td>{transaction.date}</td>
-                                <td>{transaction.client}</td>
-                                <td>{transaction.city}</td>
-                                <td>{transaction.product}</td>
-                                <td>{transaction.quantity}</td>
-                                <td>R$ {transaction.value}</td>
-                                <td>{transaction.seller}</td>
+                    {filteredSales.length > 0 ? (
+                        filteredSales.map((sale) => (
+                            <tr key={sale.id}>
+                                <td>{sale.date}</td>
+                                <td>{sale.client}</td>
+                                <td>{sale.city}</td>
+                                <td>{sale.product}</td>
+                                <td>{sale.quantity}</td>
+                                <td>R$ {sale.value}</td>
+                                <td>{sale.seller}</td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={7}>Nenhuma transação encontrada</td>
+                            <td colSpan={7}>Nenhuma venda encontrada</td>
                         </tr>
                     )}
                 </tbody>

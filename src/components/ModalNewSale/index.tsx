@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import './styles.css';
-import { useModalNewTransaction } from "../../context/modalNewTransactionContext";
-import { useTableTransactions } from "../../context/tableTransactionsContext";
+import { useModalNewSale } from "../../context/modalNewSaleContext";
+import { useTableSales } from "../../context/tableSalesContext";
 import { useTableClients } from "../../context/tableClientsContext";
 import { useTableProducts } from "../../context/tableProductsContext";
 
 Modal.setAppElement("#root");
 
-export function ModalNewTransaction() {
-    const { transactions } = useTableTransactions();
-    const { isOpen, closeModalNewTransaction } = useModalNewTransaction();
-    const { createTransaction } = useTableTransactions();
+export function ModalNewSale() {
+    const { sales } = useTableSales();
+    const { isOpen, closeModalNewSale } = useModalNewSale();
+    const { createSale } = useTableSales();
     const { clients } = useTableClients();
     const { products } = useTableProducts();
 
@@ -32,14 +32,14 @@ export function ModalNewTransaction() {
     const [value, setValue] = useState<number | "">("");
     const [seller, setSeller] = useState("");
 
-    // Função para criar uma nova transação
-    const handleCreateTransaction = async () => {
+    // Função para criar uma nova venda
+    const handleCreateSale = async () => {
         if (!client || !product || quantity === "" || value === "" || !city) {
             alert("Por favor, preencha todos os campos obrigatórios.");
             return;
         }
         try {
-            await createTransaction({
+            await createSale({
                 date,
                 client,
                 city,
@@ -48,26 +48,26 @@ export function ModalNewTransaction() {
                 value,
                 seller,
             });
-            closeModalNewTransaction();
+            closeModalNewSale();
         } catch (error) {
-            console.error("Erro ao criar transação:", error);
-            alert("Ocorreu um erro ao criar a transação.");
+            console.error("Erro ao criar venda:", error);
+            alert("Ocorreu um erro ao criar a venda.");
         }
     };
 
     return (
         <Modal
-            id="modal-new-transaction"
+            id="modal-new-sale"
             isOpen={isOpen}
-            onRequestClose={closeModalNewTransaction}
-            contentLabel="Nova Transação"
+            onRequestClose={closeModalNewSale}
+            contentLabel="Nova Venda"
             className="ReactModal__Content"
             overlayClassName="ReactModal__Overlay"
         >
             <div className="modal-header">
-                <h2>Nova Transação</h2>
-                <button className="modal-close" onClick={closeModalNewTransaction}>
-                    &times;
+                <h2>Nova Venda</h2>
+                <button className="modal-close" onClick={closeModalNewSale}>
+                    ×
                 </button>
             </div>
             <div className="modal-body">
@@ -103,9 +103,9 @@ export function ModalNewTransaction() {
                         style={{ marginBottom: "10px" }}
                     >
                         <option value="">Selecione uma cidade</option>
-                        {transactions.map((transaction) => (
-                            <option key={transaction.id} value={transaction.city}>
-                                {transaction.city}
+                        {sales.map((sale) => (
+                            <option key={sale.id} value={sale.city}>
+                                {sale.city}
                             </option>
                         ))}
                     </select>
@@ -165,14 +165,14 @@ export function ModalNewTransaction() {
                 <button
                     type="button"
                     className="cancel"
-                    onClick={closeModalNewTransaction}
+                    onClick={closeModalNewSale}
                 >
                     Cancelar
                 </button>
                 <button
                     type="button"
                     className="confirm"
-                    onClick={handleCreateTransaction}
+                    onClick={handleCreateSale}
                 >
                     Confirmar
                 </button>
