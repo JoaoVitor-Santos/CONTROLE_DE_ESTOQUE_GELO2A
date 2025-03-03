@@ -4,43 +4,47 @@ import { SideBar } from './components/SideBar';
 import { TableSales } from './components/TableSales';
 import { TableClients } from './components/TableClients';
 import { TableProducts } from './components/TableProducts';
+import { FinanceControl } from './components/FinanceControl';
+import { FinanceControlProvider, useFinanceControl } from './context/FinanceControlContext';
 import { ModalNewClientProvider } from './context/modalNewClientContext';
 import { ModalNewProductProvider } from './context/modalNewProductContext';
 import { ModalNewSaleProvider } from './context/modalNewSaleContext';
-import { ModalNewSpentProvider } from './context/modalNewSpent'; // Novo provider para despesas
+import { ModalNewSpentProvider } from './context/modalNewSpent';
 import { TableSalesProvider, useTableSales } from './context/tableSalesContext';
 import { TableClientsProvider, useTableClients } from './context/tableClientsContext';
 import { TableProductsProvider, useTableProducts } from './context/tableProductsContext';
+import { TableSpentsProvider, useTableSpents } from './context/tableSpentContext';
 import { ModalNewClient } from './components/ModalNewClient';
 import { ModalNewProduct } from './components/ModalNewProduct/ModalNewProduct';
 import { ModalNewSale } from './components/ModalNewSale';
-import { ModalNewSpent } from './components/ModalNewSpent'; // Importando o novo modal
+import { ModalNewSpent } from './components/ModalNewSpent';
 import './styles/global.css';
 
 function App() {
-    const { setIsOpenSales } = useTableSales(); // Obtendo a função setIsOpen
+    const { setIsOpenSales } = useTableSales();
     const { setIsOpenClients } = useTableClients();
     const { setIsOpenProducts } = useTableProducts();
+    const { setIsOpenFinanceControl } = useFinanceControl(); // Adicionado para controlar FinanceControl
 
     return (
         <div className="App">
             <TopBar title="Controle de Estoque e Finanças" />
-            {/* Passando setIsOpen para o SideBar */}
             <SideBar 
                 title="Menu" 
                 setIsOpenSales={setIsOpenSales} 
                 setIsOpenClients={setIsOpenClients} 
                 setIsOpenProducts={setIsOpenProducts} 
+                setIsOpenFinanceControl={setIsOpenFinanceControl} // Corrigido para usar setIsOpenFinanceControl
             />
-            {/* Renderizando todos os modais */}
             <ModalNewClient />
             <ModalNewProduct />
             <ModalNewSale />
-            <ModalNewSpent /> {/* Novo modal para despesas */}
+            <ModalNewSpent />
             <div id='content'>
-                <TableSales /> {/* Renderiza a tabela com base no estado */}
+                <TableSales />
                 <TableClients />
                 <TableProducts />
+                <FinanceControl />
             </div>
         </div>
     );
@@ -51,11 +55,15 @@ export default function RootApp() {
         <ModalNewClientProvider> 
             <ModalNewProductProvider>
                 <ModalNewSaleProvider>
-                    <ModalNewSpentProvider> {/* Provider para despesas */}
+                    <ModalNewSpentProvider>
                         <TableSalesProvider>
                             <TableClientsProvider>
                                 <TableProductsProvider>
-                                    <App />
+                                    <TableSpentsProvider>
+                                        <FinanceControlProvider>
+                                            <App />
+                                        </FinanceControlProvider>
+                                    </TableSpentsProvider>
                                 </TableProductsProvider>
                             </TableClientsProvider>
                         </TableSalesProvider>

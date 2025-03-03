@@ -1,0 +1,361 @@
+/* Geral */
+.finance-control-container {
+    width: 80%; /* Reduzido para não sobrepor a SideBar */
+    margin: 6vw auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative; /* Garante posicionamento relativo para z-index */
+    z-index: 1000; /* Menor que SideBar (1001) e TopBar (1002) */
+}
+
+/* Resumo */
+.summary {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.summary-item {
+    text-align: center;
+    flex-basis: 30%;
+}
+
+.summary-item h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.summary-item p {
+    margin: 5px 0 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Filtros */
+.filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin: auto;
+    padding: 0 5px;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex-basis: 23%;
+}
+
+.filter-item label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333333;
+    white-space: nowrap;
+    text-align: center;
+    width: 100%;
+}
+
+.DropdownFiltersTable,
+.filter-item input {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #333333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 10px;
+}
+
+.DropdownFiltersTable:hover,
+.filter-item input:hover {
+    border-color: #4674cc;
+}
+
+.DropdownFiltersTable:focus,
+.filter-item input:focus {
+    outline: none;
+    border-color: #4674cc;
+    box-shadow: 0 0 5px rgba(70, 116, 204, 0.5);
+}
+
+/* Gráfico */
+.chart-container {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Tabela Principal */
+.table-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    table-layout: fixed;
+}
+
+th,
+td {
+    width: 25%; /* Ajustado para 4 colunas */
+    text-align: left;
+    padding: 10px 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+thead {
+    background-color: #4674cc;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+thead th {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+tbody {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+tbody tr {
+    width: 100%;
+    table-layout: fixed;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Projeção */
+.projection {
+    margin: 20px 0;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.projection h3 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.projection p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #333333;
+}
+
+/* Exportação */
+.export {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.export-button {
+    padding: 10px 20px;
+    background-color: #4674cc;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.export-button:hover {
+    background-color: #3b6ac9;
+}
+
+/* Resumo Mensal */
+.monthly-summary {
+    margin-top: 20px;
+}
+
+.monthly-summary h3 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.monthly-summary table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    table-layout: fixed;
+}
+
+.monthly-summary th,
+.monthly-summary td {
+    width: 25%; /* Ajustado para 4 colunas */
+    text-align: left;
+    padding: 10px 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.monthly-summary thead {
+    background-color: #4674cc;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.monthly-summary thead th {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.monthly-summary tbody {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Botão de minimizar/maximizar o gráfico */
+.toggle-chart-button {
+    padding: 8px 16px;
+    background-color: #4674cc;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.toggle-chart-button:hover {
+    background-color: #3b6ac9;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .finance-control-container {
+        width: calc(100vw - 2vw);
+        margin-left: calc(20vw + 10px); /* Ajusta para a SideBar maior (20vw) em telas menores */
+        margin-top: calc(10vw + 20px); /* Ajusta para a TopBar maior (10vw) */
+    }
+
+    .summary {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .summary-item {
+        width: 100%;
+    }
+
+    .filters {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .filter-item {
+        flex-basis: 100%;
+    }
+
+    .chart-container {
+        overflow-x: auto;
+    }
+
+    .table-container,
+    .monthly-summary {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .table-container table,
+    .monthly-summary table {
+        display: block;
+    }
+
+    .table-container thead,
+    .table-container tbody,
+    .table-container th,
+    .table-container td,
+    .table-container tr,
+    .monthly-summary thead,
+    .monthly-summary tbody,
+    .monthly-summary th,
+    .monthly-summary td,
+    .monthly-summary tr {
+        display: block;
+    }
+
+    .table-container thead tr,
+    .monthly-summary thead tr {
+        display: none;
+    }
+
+    .table-container tbody td,
+    .monthly-summary tbody td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .table-container tbody td::before,
+    .monthly-summary tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #4674cc;
+    }
+}

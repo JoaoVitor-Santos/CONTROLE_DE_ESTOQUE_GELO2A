@@ -1,22 +1,21 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { api } from "../services/api";
 
-// Interfaces
 interface Sale {
-  id: number;
-  date: string;
-  client: string;
-  city: string;
-  product: string;
-  quantity: number;
-  value: number;
-  seller: string;
+  CO_ID: number;
+  DT_DATE: string;
+  CO_CLIENT: string;
+  CG_CITY: string;
+  CO_PRODUCT: string;
+  CD_QUANTITY: number;
+  VL_VALUE: number;
+  CO_SELLER: string;
 }
 
-type SaleEntry = Omit<Sale, "id">;
+type SaleEntry = Omit<Sale, "CO_ID">;
 
 interface SalesContextData {
-  sales: Sale[];
+  tbSales: Sale[];
   createSale: (sale: SaleEntry) => Promise<void>;
   isOpenSales: boolean;
   setIsOpenSales: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,38 +27,34 @@ interface ProviderSalesProps {
 
 const TableContext = createContext<SalesContextData>({} as SalesContextData);
 
-// Provedor de Vendas
 export const TableSalesProvider: React.FC<ProviderSalesProps> = ({ children }) => {
-  const [sales, setSales] = useState<Sale[]>([]);
+  const [tbSales, setTbSales] = useState<Sale[]>([]);
   const [isOpenSales, setIsOpenSales] = useState(false);
 
-  // Carregar vendas ao iniciar
   useEffect(() => {
     api.get("/sales").then((response) => {
-      const data = response.data.sales || [];
-      setSales(data);
+      const data = response.data.tbSales || [];
+      setTbSales(data);
     });
   }, []);
 
-  // Criar nova venda
   async function createSale(sale: SaleEntry) {
     const response = await api.post("/sales", sale);
     const data = response.data.sale;
-    setSales([...sales, data]);
+    setTbSales([...tbSales, data]);
   }
 
   return (
-    <TableContext.Provider value={{ sales, createSale, isOpenSales, setIsOpenSales }}>
+    <TableContext.Provider value={{ tbSales, createSale, isOpenSales, setIsOpenSales }}>
       {children}
     </TableContext.Provider>
   );
 };
 
-// Hook para usar o contexto
 export function useTableSales(): SalesContextData {
   const context = useContext(TableContext);
   if (!context) {
-    throw new Error("useTable must be used within a TableProvider");
+    throw new Error("useTableSales must be used within a TableSalesProvider");
   }
   return context;
 }

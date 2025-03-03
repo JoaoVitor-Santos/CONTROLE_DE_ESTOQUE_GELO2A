@@ -3,48 +3,57 @@ import './styles.css';
 import { useTableClients } from "../../context/tableClientsContext";
 
 export function TableClients() {
-    const { clients, isOpenClients } = useTableClients();
-    const [selectedCity, setSelectedCity] = useState("");
-    const [selectedBalanceType, setSelectedBalanceType] = useState("");
+    const { tbClients, isOpenClients } = useTableClients();
+    const [CG_CITY_FILTER, setCG_CITY_FILTER] = useState("");
+    const [BALANCE_TYPE_FILTER, setBALANCE_TYPE_FILTER] = useState("");
 
     if (!isOpenClients) {
         return null;
     }
 
-    const formatBalance = (balance: number): string => {
-        if (balance > 0) {
-            return `+ R$ ${balance.toFixed(2)}`;
-        } else if (balance < 0) {
-            return `- R$ ${Math.abs(balance).toFixed(2)}`;
+    const formatBalance = (VL_BALANCE: number | string): string => {
+        // Converte VL_BALANCE para número, tratando possíveis strings
+        const balanceNumber = typeof VL_BALANCE === "string" ? parseFloat(VL_BALANCE) : VL_BALANCE;
+
+        if (isNaN(balanceNumber)) {
+            return "R$ 0.00"; // Caso a conversão falhe, retorna 0
+        }
+
+        if (balanceNumber > 0) {
+            return `+ R$ ${balanceNumber.toFixed(2)}`;
+        } else if (balanceNumber < 0) {
+            return `- R$ ${Math.abs(balanceNumber).toFixed(2)}`;
         } else {
             return `R$ 0.00`;
         }
     };
 
-    const filteredClients = clients.filter((client) => {
-        const matchesCity = selectedCity ? client.city === selectedCity : true;
+    const filteredClients = tbClients.filter((client) => {
+        const matchesCity = CG_CITY_FILTER ? client.CG_CITY === CG_CITY_FILTER : true;
+        // Converte VL_BALANCE para número no filtro também
+        const balanceNumber = typeof client.VL_BALANCE === "string" ? parseFloat(client.VL_BALANCE) : client.VL_BALANCE;
         const matchesBalanceType =
-            selectedBalanceType === "positive"
-                ? client.balance > 0
-                : selectedBalanceType === "negative"
-                ? client.balance < 0
+            BALANCE_TYPE_FILTER === "positive"
+                ? balanceNumber > 0
+                : BALANCE_TYPE_FILTER === "negative"
+                ? balanceNumber < 0
                 : true;
 
         return matchesCity && matchesBalanceType;
     });
 
-    const uniqueCities = Array.from(new Set(clients.map((client) => client.city)));
+    const uniqueCities = Array.from(new Set(tbClients.map((client) => client.CG_CITY)));
 
     return (
         <div className="table-container">
             <div className="filters">
                 <div className="filter-item">
-                    <label htmlFor="city">Filtrar por Cidade:</label>
+                    <label htmlFor="CG_CITY">Filtrar por Cidade:</label>
                     <select
-                        id="city"
+                        id="CG_CITY"
                         className="DropdownFiltersTable"
-                        value={selectedCity}
-                        onChange={(e) => setSelectedCity(e.target.value)}
+                        value={CG_CITY_FILTER}
+                        onChange={(e) => setCG_CITY_FILTER(e.target.value)}
                     >
                         <option value="">Todas as cidades</option>
                         {uniqueCities.map((city) => (
@@ -56,12 +65,12 @@ export function TableClients() {
                 </div>
 
                 <div className="filter-item">
-                    <label htmlFor="balance-type">Filtrar por Saldo:</label>
+                    <label htmlFor="BALANCE_TYPE">Filtrar por Saldo:</label>
                     <select
-                        id="balance-type"
+                        id="BALANCE_TYPE"
                         className="DropdownFiltersTable"
-                        value={selectedBalanceType}
-                        onChange={(e) => setSelectedBalanceType(e.target.value)}
+                        value={BALANCE_TYPE_FILTER}
+                        onChange={(e) => setBALANCE_TYPE_FILTER(e.target.value)}
                     >
                         <option value="">Todos os saldos</option>
                         <option value="positive">Saldo Positivo</option>
@@ -83,12 +92,12 @@ export function TableClients() {
                 <tbody>
                     {filteredClients.length > 0 ? (
                         filteredClients.map((client) => (
-                            <tr key={client.id}>
-                                <td>{client.name}</td>
-                                <td>{client.phone}</td>
-                                <td>{client.address}</td>
-                                <td>{client.city}</td>
-                                <td>{formatBalance(client.balance)}</td>
+                            <tr key={client.CO_ID}>
+                                <td>{client.CO_NAME}</td>
+                                <td>{client.CO_PHONE}</td>
+                                <td>{client.CG_ADDRESS}</td>
+                                <td>{client.CG_CITY}</td>
+                                <td>{formatBalance(client.VL_BALANCE)}</td>
                             </tr>
                         ))
                     ) : (

@@ -9,45 +9,51 @@ import { useTableProducts } from "../../context/tableProductsContext";
 Modal.setAppElement("#root");
 
 export function ModalNewSale() {
-    const { sales } = useTableSales();
+    const { tbSales } = useTableSales();
     const { isOpen, closeModalNewSale } = useModalNewSale();
     const { createSale } = useTableSales();
-    const { clients } = useTableClients();
-    const { products } = useTableProducts();
+    const { tbClients } = useTableClients();
+    const { tbProducts } = useTableProducts();
 
-    // Função para obter a data atual
     const getCurrentDate = () => {
         const today = new Date();
         const day = String(today.getDate()).padStart(2, "0");
-        const month = String(today.getMonth() + 1).padStart(2, "0"); // Janeiro é 0
+        const month = String(today.getMonth() + 1).padStart(2, "0");
         const year = today.getFullYear();
         return `${day}/${month}/${year}`;
     };
 
-    const [date, setDate] = useState(getCurrentDate());
-    const [client, setClient] = useState("");
-    const [product, setProduct] = useState("");
-    const [city, setCity] = useState(""); // Estado para a cidade selecionada ou digitada
-    const [quantity, setQuantity] = useState<number | "">("");
-    const [value, setValue] = useState<number | "">("");
-    const [seller, setSeller] = useState("");
+    const [DT_DATE, setDT_DATE] = useState(getCurrentDate());
+    const [CO_CLIENT, setCO_CLIENT] = useState("");
+    const [CO_PRODUCT, setCO_PRODUCT] = useState("");
+    const [CG_CITY, setCG_CITY] = useState("");
+    const [CD_QUANTITY, setCD_QUANTITY] = useState<number | "">("");
+    const [VL_VALUE, setVL_VALUE] = useState<number | "">("");
+    const [CO_SELLER, setCO_SELLER] = useState("");
 
-    // Função para criar uma nova venda
     const handleCreateSale = async () => {
-        if (!client || !product || quantity === "" || value === "" || !city) {
+        if (!CO_CLIENT || !CO_PRODUCT || CD_QUANTITY === "" || VL_VALUE === "" || !CG_CITY) {
             alert("Por favor, preencha todos os campos obrigatórios.");
             return;
         }
         try {
             await createSale({
-                date,
-                client,
-                city,
-                product,
-                quantity,
-                value,
-                seller,
+                DT_DATE,
+                CO_CLIENT,
+                CG_CITY,
+                CO_PRODUCT,
+                CD_QUANTITY,
+                VL_VALUE,
+                CO_SELLER,
             });
+
+            setDT_DATE(getCurrentDate());
+            setCO_CLIENT("");
+            setCO_PRODUCT("");
+            setCG_CITY("");
+            setCD_QUANTITY("");
+            setVL_VALUE("");
+            setCO_SELLER("");
             closeModalNewSale();
         } catch (error) {
             console.error("Erro ao criar venda:", error);
@@ -71,93 +77,91 @@ export function ModalNewSale() {
                 </button>
             </div>
             <div className="modal-body">
-                <label htmlFor="date">Data:</label>
+                <label htmlFor="DT_DATE">Data:</label>
                 <input
                     type="date"
-                    id="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
+                    id="DT_DATE"
+                    value={DT_DATE}
+                    onChange={(e) => setDT_DATE(e.target.value)}
                 />
 
-                <label htmlFor="client">Cliente:</label>
+                <label htmlFor="CO_CLIENT">Cliente:</label>
                 <select
-                    id="client"
-                    value={client}
-                    onChange={(e) => setClient(e.target.value)}
+                    id="CO_CLIENT"
+                    value={CO_CLIENT}
+                    onChange={(e) => setCO_CLIENT(e.target.value)}
                 >
                     <option value="">Selecione um cliente</option>
-                    {clients.map((client) => (
-                        <option key={client.id} value={client.id}>
-                            {client.name}
+                    {tbClients.map((client) => (
+                        <option key={client.CO_ID} value={client.CO_ID}>
+                            {client.CO_NAME}
                         </option>
                     ))}
                 </select>
 
-                <label htmlFor="city">Cidade:</label>
+                <label htmlFor="CG_CITY">Cidade:</label>
                 <div style={{ display: "flex", flexDirection: "column" }}>
-                    {/* Campo de seleção para cidades */}
                     <select
                         id="city-select"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        value={CG_CITY}
+                        onChange={(e) => setCG_CITY(e.target.value)}
                         style={{ marginBottom: "10px" }}
                     >
                         <option value="">Selecione uma cidade</option>
-                        {sales.map((sale) => (
-                            <option key={sale.id} value={sale.city}>
-                                {sale.city}
+                        {tbSales.map((sale) => (
+                            <option key={sale.CO_ID} value={sale.CG_CITY}>
+                                {sale.CG_CITY}
                             </option>
                         ))}
                     </select>
 
-                    {/* Campo de entrada para cidade manual */}
                     <input
                         type="text"
                         id="city-input"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        value={CG_CITY}
+                        onChange={(e) => setCG_CITY(e.target.value)}
                         placeholder="Digite a cidade se não encontrada"
                     />
                 </div>
 
-                <label htmlFor="product">Produto:</label>
+                <label htmlFor="CO_PRODUCT">Produto:</label>
                 <select
-                    id="product"
-                    value={product}
-                    onChange={(e) => setProduct(e.target.value)}
+                    id="CO_PRODUCT"
+                    value={CO_PRODUCT}
+                    onChange={(e) => setCO_PRODUCT(e.target.value)}
                 >
                     <option value="">Selecione um produto</option>
-                    {products.map((product) => (
-                        <option key={product.id} value={product.id}>
-                            {product.name}
+                    {tbProducts.map((product) => (
+                        <option key={product.CO_ID} value={product.CO_ID}>
+                            {product.CO_NAME}
                         </option>
                     ))}
                 </select>
 
-                <label htmlFor="quantity">Quantidade:</label>
+                <label htmlFor="CD_QUANTITY">Quantidade:</label>
                 <input
                     type="number"
-                    id="quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value === "" ? "" : Number(e.target.value))}
+                    id="CD_QUANTITY"
+                    value={CD_QUANTITY}
+                    onChange={(e) => setCD_QUANTITY(e.target.value === "" ? "" : Number(e.target.value))}
                     placeholder="Digite a quantidade"
                 />
 
-                <label htmlFor="value">Valor:</label>
+                <label htmlFor="VL_VALUE">Valor:</label>
                 <input
                     type="number"
-                    id="value"
-                    value={value}
-                    onChange={(e) => setValue(e.target.value === "" ? "" : Number(e.target.value))}
+                    id="VL_VALUE"
+                    value={VL_VALUE}
+                    onChange={(e) => setVL_VALUE(e.target.value === "" ? "" : Number(e.target.value))}
                     placeholder="Digite o valor"
                 />
 
-                <label htmlFor="seller">Vendedor:</label>
+                <label htmlFor="CO_SELLER">Vendedor:</label>
                 <input
                     type="text"
-                    id="seller"
-                    value={seller}
-                    onChange={(e) => setSeller(e.target.value)}
+                    id="CO_SELLER"
+                    value={CO_SELLER}
+                    onChange={(e) => setCO_SELLER(e.target.value)}
                     placeholder="Digite o nome do vendedor"
                 />
             </div>

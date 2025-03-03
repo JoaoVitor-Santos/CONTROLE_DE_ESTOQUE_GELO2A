@@ -4,47 +4,37 @@ import './styles.css';
 import { useModalNewSpent } from "../../context/modalNewSpent";
 import { useTableSpents } from "../../context/tableSpentContext";
 
-// Configura o elemento raiz para acessibilidade no modal
 Modal.setAppElement("#root");
 
 export function ModalNewSpent() {
     const { isOpen, closeModalNewSpent } = useModalNewSpent();
     const { createSpent, setIsOpenSpents } = useTableSpents();
 
-    // Estados locais para os campos do formulário
     const [formData, setFormData] = useState({
-        date: "",
-        value: 0,
-        description: "",
-        type: "",
+        DT_DATE: "",
+        VL_VALUE: 0,
+        CO_DESCRIPTION: "",
+        CO_TYPE: "",
     });
 
-    // Função para lidar com as mudanças nos campos do formulário
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [name]: name === "VL_VALUE" ? Number(value) : value,
         }));
     };
 
-    // Função para lidar com o envio do formulário
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        // Cria o novo gasto usando o contexto
         await createSpent(formData);
-
-        // Fecha o modal e atualiza a tabela de gastos
         closeModalNewSpent();
         setIsOpenSpents(false);
-
-        // Limpa o formulário
         setFormData({
-            date: "",
-            value: 0,
-            description: "",
-            type: "",
+            DT_DATE: "",
+            VL_VALUE: 0,
+            CO_DESCRIPTION: "",
+            CO_TYPE: "",
         });
     };
 
@@ -58,50 +48,50 @@ export function ModalNewSpent() {
             <div className="modal-header">
                 <h2>Novo Gasto</h2>
                 <button className="close-button" onClick={closeModalNewSpent}>
-                    &times;
+                    ×
                 </button>
             </div>
             <form onSubmit={handleSubmit} className="modal-form">
                 <div className="form-group">
-                    <label htmlFor="date">Data:</label>
+                    <label htmlFor="DT_DATE">Data:</label>
                     <input
                         type="date"
-                        id="date"
-                        name="date"
-                        value={formData.date}
+                        id="DT_DATE"
+                        name="DT_DATE"
+                        value={formData.DT_DATE}
                         onChange={handleChange}
                         required
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="value">Valor:</label>
+                    <label htmlFor="VL_VALUE">Valor:</label>
                     <input
                         type="number"
-                        id="value"
-                        name="value"
-                        value={formData.value}
+                        id="VL_VALUE"
+                        name="VL_VALUE"
+                        value={formData.VL_VALUE}
                         onChange={handleChange}
                         step="0.01"
                         required
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="description">Descrição:</label>
+                    <label htmlFor="CO_DESCRIPTION">Descrição:</label>
                     <input
                         type="text"
-                        id="description"
-                        name="description"
-                        value={formData.description}
+                        id="CO_DESCRIPTION"
+                        name="CO_DESCRIPTION"
+                        value={formData.CO_DESCRIPTION}
                         onChange={handleChange}
                         required
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="type">Tipo:</label>
+                    <label htmlFor="CO_TYPE">Tipo:</label>
                     <select
-                        id="type"
-                        name="type"
-                        value={formData.type}
+                        id="CO_TYPE"
+                        name="CO_TYPE"
+                        value={formData.CO_TYPE}
                         onChange={handleChange}
                         required
                     >

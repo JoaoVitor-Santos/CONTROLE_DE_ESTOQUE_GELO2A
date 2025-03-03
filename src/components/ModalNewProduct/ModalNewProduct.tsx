@@ -11,30 +11,30 @@ interface ModalProps {
 
 export function ModalNewProduct({ onConfirm }: ModalProps) {
     const { isOpen, closeModalNewProduct } = useModalNewProduct();
-    const [name, setName] = useState("");
-    const [value, setPrice] = useState<number | "">("");
-    const [quantity, setQuantity] = useState<number | "">("");
-    const [description, setDescription] = useState("");
+    const [CO_NAME, setCO_NAME] = useState("");
+    const [VL_VALUE, setVL_VALUE] = useState<number | "">("");
+    const [CD_QUANTITY, setCD_QUANTITY] = useState<number | "">("");
+    const [CO_DESCRIPTION, setCO_DESCRIPTION] = useState("");
     const { createProduct } = useTableProducts();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!name || !value || !quantity) {
+        if (!CO_NAME || VL_VALUE === "" || CD_QUANTITY === "") {
             alert("Preencha todos os campos!");
             return;
         }
         try {
             const productData = {
-                name,
-                value,
-                quantity,
-                description,
+                CO_NAME,
+                VL_VALUE,
+                CD_QUANTITY,
+                CO_DESCRIPTION,
             };
             await createProduct(productData);
-            setName("");
-            setPrice("");
-            setQuantity("");
-            setDescription("");
+            setCO_NAME("");
+            setVL_VALUE("");
+            setCD_QUANTITY("");
+            setCO_DESCRIPTION("");
             closeModalNewProduct();
             if (onConfirm) {
                 onConfirm();
@@ -59,40 +59,40 @@ export function ModalNewProduct({ onConfirm }: ModalProps) {
             <div className="modal-header">
                 <h2>Cadastrar Novo Produto</h2>
                 <button className="modal-close" onClick={closeModalNewProduct}>
-                    &times;
+                    ×
                 </button>
             </div>
             <form className="modal-body" onSubmit={handleSubmit}>
-                <label htmlFor="name">Nome:</label>
+                <label htmlFor="CO_NAME">Nome:</label>
                 <input
                     type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    id="CO_NAME"
+                    value={CO_NAME}
+                    onChange={(e) => setCO_NAME(e.target.value)}
                     placeholder="Digite o nome do produto"
                 />
-                <label htmlFor="value">Valor:</label>
+                <label htmlFor="VL_VALUE">Valor:</label>
                 <input
                     type="number"
-                    id="value"
-                    value={value}
-                    onChange={(e) => setPrice(Number(e.target.value))}
+                    id="VL_VALUE"
+                    value={VL_VALUE}
+                    onChange={(e) => setVL_VALUE(e.target.value === "" ? "" : Number(e.target.value))}
                     placeholder="Digite o valor do produto"
                 />
-                <label htmlFor="quantity">Quantidade:</label>
+                <label htmlFor="CD_QUANTITY">Quantidade:</label>
                 <input
                     type="number"
-                    id="quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(Number(e.target.value))}
+                    id="CD_QUANTITY"
+                    value={CD_QUANTITY}
+                    onChange={(e) => setCD_QUANTITY(e.target.value === "" ? "" : Number(e.target.value))}
                     placeholder="Digite a quantidade do produto"
                 />
-                <label htmlFor="description">Descrição:</label>
+                <label htmlFor="CO_DESCRIPTION">Descrição:</label>
                 <input
                     type="text"
-                    id="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    id="CO_DESCRIPTION"
+                    value={CO_DESCRIPTION}
+                    onChange={(e) => setCO_DESCRIPTION(e.target.value)}
                     placeholder="Digite a descrição do produto"
                 />
                 <div className="modal-footer">

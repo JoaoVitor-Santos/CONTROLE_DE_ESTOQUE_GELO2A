@@ -3,51 +3,45 @@ import './styles.css';
 import { useTableSales } from "../../context/tableSalesContext";
 
 export function TableSales() {
-    const { sales, isOpenSales } = useTableSales();
+    const { tbSales, isOpenSales } = useTableSales();
 
-    // States for filters
-    const [selectedCity, setSelectedCity] = useState<string>("");
-    const [selectedProduct, setSelectedProduct] = useState<string>("");
-    const [selectedMonth, setSelectedMonth] = useState<string>("");
-    const [selectedClient, setSelectedClient] = useState<string>("");
+    const [CG_CITY_FILTER, setCG_CITY_FILTER] = useState<string>("");
+    const [CO_PRODUCT_FILTER, setCO_PRODUCT_FILTER] = useState<string>("");
+    const [MONTH_FILTER, setMONTH_FILTER] = useState<string>("");
+    const [CO_CLIENT_FILTER, setCO_CLIENT_FILTER] = useState<string>("");
 
-    // Function to extract the month from a date in the format DD/MM/YYYY
-    const extractMonth = (date: string): string => {
-        return date.split("/")[1]; // Returns the month (second part of the date)
+    const extractMonth = (DT_DATE: string): string => {
+        return DT_DATE.split("/")[1];
     };
 
-    // Filter sales based on selected filters
-    const filteredSales = sales.filter((sale) => {
-        const matchesCity = selectedCity ? sale.city === selectedCity : true;
-        const matchesProduct = selectedProduct ? sale.product === selectedProduct : true;
-        const matchesMonth = selectedMonth ? extractMonth(sale.date) === selectedMonth : true;
-        const matchesClient = selectedClient ? sale.client === selectedClient : true;
+    const filteredSales = tbSales.filter((sale) => {
+        const matchesCity = CG_CITY_FILTER ? sale.CG_CITY === CG_CITY_FILTER : true;
+        const matchesProduct = CO_PRODUCT_FILTER ? sale.CO_PRODUCT === CO_PRODUCT_FILTER : true;
+        const matchesMonth = MONTH_FILTER ? extractMonth(sale.DT_DATE) === MONTH_FILTER : true;
+        const matchesClient = CO_CLIENT_FILTER ? sale.CO_CLIENT === CO_CLIENT_FILTER : true;
 
         return matchesCity && matchesProduct && matchesMonth && matchesClient;
     });
 
-    // Get unique values for cities, products, months, and clients
-    const uniqueCities = Array.from(new Set(sales.map((s) => s.city)));
-    const uniqueProducts = Array.from(new Set(sales.map((s) => s.product)));
-    const uniqueMonths = Array.from(new Set(sales.map((s) => extractMonth(s.date))));
-    const uniqueClients = Array.from(new Set(sales.map((s) => s.client)));
+    const uniqueCities = Array.from(new Set(tbSales.map((s) => s.CG_CITY)));
+    const uniqueProducts = Array.from(new Set(tbSales.map((s) => s.CO_PRODUCT)));
+    const uniqueMonths = Array.from(new Set(tbSales.map((s) => extractMonth(s.DT_DATE))));
+    const uniqueClients = Array.from(new Set(tbSales.map((s) => s.CO_CLIENT)));
 
-    // Early return if the table is not open
     if (!isOpenSales) {
         return null;
     }
 
     return (
         <div className="table-container">
-            {/* Filters */}
             <div className="filters">
                 <div className="filter-item">
-                    <label htmlFor="city">Filtrar por Cidade:</label>
+                    <label htmlFor="CG_CITY">Filtrar por Cidade:</label>
                     <select
-                        id="city"
+                        id="CG_CITY"
                         className="DropdownFiltersTable"
-                        value={selectedCity}
-                        onChange={(e) => setSelectedCity(e.target.value)}
+                        value={CG_CITY_FILTER}
+                        onChange={(e) => setCG_CITY_FILTER(e.target.value)}
                     >
                         <option value="">Todas as cidades</option>
                         {uniqueCities.map((city) => (
@@ -59,12 +53,12 @@ export function TableSales() {
                 </div>
 
                 <div className="filter-item">
-                    <label htmlFor="product">Filtrar por Produto:</label>
+                    <label htmlFor="CO_PRODUCT">Filtrar por Produto:</label>
                     <select
-                        id="product"
+                        id="CO_PRODUCT"
                         className="DropdownFiltersTable"
-                        value={selectedProduct}
-                        onChange={(e) => setSelectedProduct(e.target.value)}
+                        value={CO_PRODUCT_FILTER}
+                        onChange={(e) => setCO_PRODUCT_FILTER(e.target.value)}
                     >
                         <option value="">Todos os produtos</option>
                         {uniqueProducts.map((product) => (
@@ -76,12 +70,12 @@ export function TableSales() {
                 </div>
 
                 <div className="filter-item">
-                    <label htmlFor="month">Filtrar por Mês:</label>
+                    <label htmlFor="MONTH">Filtrar por Mês:</label>
                     <select
-                        id="month"
+                        id="MONTH"
                         className="DropdownFiltersTable"
-                        value={selectedMonth}
-                        onChange={(e) => setSelectedMonth(e.target.value)}
+                        value={MONTH_FILTER}
+                        onChange={(e) => setMONTH_FILTER(e.target.value)}
                     >
                         <option value="">Todos os meses</option>
                         {uniqueMonths.map((month) => (
@@ -93,12 +87,12 @@ export function TableSales() {
                 </div>
 
                 <div className="filter-item">
-                    <label htmlFor="client">Filtrar por Cliente:</label>
+                    <label htmlFor="CO_CLIENT">Filtrar por Cliente:</label>
                     <select
-                        id="client"
+                        id="CO_CLIENT"
                         className="DropdownFiltersTable"
-                        value={selectedClient}
-                        onChange={(e) => setSelectedClient(e.target.value)}
+                        value={CO_CLIENT_FILTER}
+                        onChange={(e) => setCO_CLIENT_FILTER(e.target.value)}
                     >
                         <option value="">Todos os clientes</option>
                         {uniqueClients.map((client) => (
@@ -110,7 +104,6 @@ export function TableSales() {
                 </div>
             </div>
 
-            {/* Table */}
             <table>
                 <thead>
                     <tr>
@@ -126,14 +119,14 @@ export function TableSales() {
                 <tbody>
                     {filteredSales.length > 0 ? (
                         filteredSales.map((sale) => (
-                            <tr key={sale.id}>
-                                <td>{sale.date}</td>
-                                <td>{sale.client}</td>
-                                <td>{sale.city}</td>
-                                <td>{sale.product}</td>
-                                <td>{sale.quantity}</td>
-                                <td>R$ {sale.value}</td>
-                                <td>{sale.seller}</td>
+                            <tr key={sale.CO_ID}>
+                                <td>{sale.DT_DATE}</td>
+                                <td>{sale.CO_CLIENT}</td>
+                                <td>{sale.CG_CITY}</td>
+                                <td>{sale.CO_PRODUCT}</td>
+                                <td>{sale.CD_QUANTITY}</td>
+                                <td>R$ {sale.VL_VALUE}</td>
+                                <td>{sale.CO_SELLER}</td>
                             </tr>
                         ))
                     ) : (

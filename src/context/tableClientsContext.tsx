@@ -1,20 +1,19 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { api } from "../services/api";
 
-// Interfaces
 interface Client {
-    id: number;
-    name: string;
-    balance: number;
-    phone: string;
-    address: string;
-    city: string;
+    CO_ID: number;
+    CO_NAME: string;
+    VL_BALANCE: number;
+    CO_PHONE: string;
+    CG_ADDRESS: string;
+    CG_CITY: string;
 }
 
-type ClientEntry = Omit<Client, "id">;
+type ClientEntry = Omit<Client, "CO_ID">;
 
 interface ClientsContextData {
-    clients: Client[];
+    tbClients: Client[];
     createClient: (client: ClientEntry) => Promise<void>;
     isOpenClients: boolean;
     setIsOpenClients: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,37 +25,35 @@ interface ProviderClientsProps {
 
 const ClientsContext = createContext<ClientsContextData>({} as ClientsContextData);
 
-// Provedor de Clientes
 export const TableClientsProvider: React.FC<ProviderClientsProps> = ({ children }) => {
-    const [clients, setClients] = useState<Client[]>([]);
+    const [tbClients, setTbClients] = useState<Client[]>([]);
     const [isOpenClients, setIsOpenClients] = useState(false);
 
-    // Carregar clientes ao iniciar
     useEffect(() => {
         api.get("/clients").then((response) => {
-            const data = response.data.clients || [];
-            setClients(data);
+            const data = response.data.tbClients || [];
+            console.log("resposta da api", data);
+            setTbClients(data);
         });
     }, []);
 
-    // Criar novo cliente
     async function createClient(client: ClientEntry) {
         const response = await api.post("/clients", client);
         const data = response.data.client;
-        setClients([...clients, data]);
+        setTbClients([...tbClients, data]);
     }
 
     return (
-        <ClientsContext.Provider value={{ clients, createClient, isOpenClients, setIsOpenClients }}>
+        <ClientsContext.Provider value={{ tbClients, createClient, isOpenClients, setIsOpenClients }}>
             {children}
         </ClientsContext.Provider>
-    )
+    );
 };
 
-export function useTableClients() {
+export function useTableClients(): ClientsContextData {
     const context = useContext(ClientsContext);
     if (!context) {
-        throw new Error("useClients must be used within a ClientsProvider");
+        throw new Error("useTableClients must be used within a TableClientsProvider");
     }
     return context;
 }

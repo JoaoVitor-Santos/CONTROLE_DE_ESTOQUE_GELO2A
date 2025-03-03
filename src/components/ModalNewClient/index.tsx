@@ -11,60 +11,53 @@ interface ModalProps {
 }
 
 export function ModalNewClient({ onConfirm }: ModalProps) {
-    const { clients } = useTableClients(); // Use o hook useClients para obter os clientes
+    const { tbClients } = useTableClients();
     const { isOpen, closeModalNewClient } = useModalNewClient();
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [address, setAddress] = useState("");
-    const [balance, setBalance] = useState<number | "">("");
-    const [city, setCity] = useState(""); // Estado para a cidade selecionada ou digitada
-    const [isCustomCity, setIsCustomCity] = useState(false); // Controla se o input personalizado está visível
+    const [CO_NAME, setCO_NAME] = useState("");
+    const [CO_EMAIL, setCO_EMAIL] = useState("");
+    const [CO_PHONE, setCO_PHONE] = useState("");
+    const [CG_ADDRESS, setCG_ADDRESS] = useState("");
+    const [VL_BALANCE, setVL_BALANCE] = useState<number | "">("");
+    const [CG_CITY, setCG_CITY] = useState("");
+    const [isCustomCity, setIsCustomCity] = useState(false);
 
     const { createClient } = useTableClients();
 
-    // Obter lista única de cidades dos clientes existentes
-    const uniqueCities = Array.from(new Set(clients.map((client) => client.city)));
+    const uniqueCities = Array.from(new Set(tbClients.map((client) => client.CG_CITY)));
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validação básica
-        if (!name || !email || !phone || !address || balance === "" || !city) {
+        if (!CO_NAME || !CO_EMAIL || !CO_PHONE || !CG_ADDRESS || VL_BALANCE === "" || !CG_CITY) {
             alert("Preencha todos os campos!");
             return;
         }
 
         try {
-            // Criar objeto de cliente
             const clientData = {
-                name,
-                email,
-                phone,
-                address,
-                balance: Number(balance), // Convertendo para número
-                city,
+                CO_NAME,
+                CO_EMAIL,
+                CO_PHONE,
+                CG_ADDRESS,
+                VL_BALANCE: Number(VL_BALANCE),
+                CG_CITY,
             };
 
-            // Chamar a função createClient do contexto
             await createClient(clientData);
 
-            // Limpar os campos do formulário
-            setName("");
-            setEmail("");
-            setPhone("");
-            setAddress("");
-            setBalance("");
-            setCity("");
-            setIsCustomCity(false); // Resetar o estado do input personalizado
+            setCO_NAME("");
+            setCO_EMAIL("");
+            setCO_PHONE("");
+            setCG_ADDRESS("");
+            setVL_BALANCE("");
+            setCG_CITY("");
+            setIsCustomCity(false);
             closeModalNewClient();
 
-            // Executar callback opcional
             if (onConfirm) {
                 onConfirm();
             }
 
-            // Feedback ao usuário
             alert("Cliente cadastrado com sucesso!");
         } catch (error) {
             console.error("Erro ao cadastrar cliente:", error);
@@ -85,61 +78,61 @@ export function ModalNewClient({ onConfirm }: ModalProps) {
             <div className="modal-header">
                 <h2>Cadastrar Novo Cliente</h2>
                 <button className="modal-close" onClick={closeModalNewClient}>
-                    &times;
+                    ×
                 </button>
             </div>
             <form className="modal-body" onSubmit={handleSubmit}>
-                <label htmlFor="name">Nome:</label>
+                <label htmlFor="CO_NAME">Nome:</label>
                 <input
                     type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    id="CO_NAME"
+                    value={CO_NAME}
+                    onChange={(e) => setCO_NAME(e.target.value)}
                     placeholder="Digite o nome do cliente"
                 />
 
-                <label htmlFor="email">Email:</label>
+                <label htmlFor="CO_EMAIL">Email:</label>
                 <input
                     type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="CO_EMAIL"
+                    value={CO_EMAIL}
+                    onChange={(e) => setCO_EMAIL(e.target.value)}
                     placeholder="Digite o email do cliente"
                 />
 
-                <label htmlFor="phone">Telefone:</label>
+                <label htmlFor="CO_PHONE">Telefone:</label>
                 <input
                     type="text"
-                    id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    id="CO_PHONE"
+                    value={CO_PHONE}
+                    onChange={(e) => setCO_PHONE(e.target.value)}
                     placeholder="Digite o telefone do cliente"
                 />
 
-                <label htmlFor="address">Endereço:</label>
+                <label htmlFor="CG_ADDRESS">Endereço:</label>
                 <input
                     type="text"
-                    id="address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    id="CG_ADDRESS"
+                    value={CG_ADDRESS}
+                    onChange={(e) => setCG_ADDRESS(e.target.value)}
                     placeholder="Digite o endereço do cliente"
                 />
 
-                <label htmlFor="balance">Saldo:</label>
+                <label htmlFor="VL_BALANCE">Saldo:</label>
                 <input
                     type="number"
-                    id="balance"
-                    value={balance}
-                    onChange={(e) => setBalance(Number(e.target.value))}
+                    id="VL_BALANCE"
+                    value={VL_BALANCE}
+                    onChange={(e) => setVL_BALANCE(e.target.value === "" ? "" : Number(e.target.value))}
                     placeholder="Digite o saldo do cliente"
                 />
 
-                <label htmlFor="city">Cidade:</label>
+                <label htmlFor="CG_CITY">Cidade:</label>
                 {!isCustomCity ? (
                     <select
-                        id="city"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        id="CG_CITY"
+                        value={CG_CITY}
+                        onChange={(e) => setCG_CITY(e.target.value)}
                     >
                         <option value="">Selecione uma cidade</option>
                         {uniqueCities.map((cityOption) => (
@@ -147,26 +140,26 @@ export function ModalNewClient({ onConfirm }: ModalProps) {
                                 {cityOption}
                             </option>
                         ))}
-                        <option value="custom">Outra cidade...</option> {/* Opção para inserir cidade manualmente */}
+                        <option value="custom">Outra cidade...</option>
                     </select>
                 ) : (
                     <input
                         type="text"
                         id="city-input"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        value={CG_CITY}
+                        onChange={(e) => setCG_CITY(e.target.value)}
                         placeholder="Digite a cidade"
                     />
                 )}
 
-                {city === "custom" && (
+                {CG_CITY === "custom" && (
                     <div className="city-actions">
                         <button
                             id="add-custom-city-new-client"
                             type="button"
                             onClick={() => {
                                 setIsCustomCity(true);
-                                setCity(""); // Limpa o valor do estado city
+                                setCG_CITY("");
                             }}
                         >
                             Inserir Cidade Manualmente

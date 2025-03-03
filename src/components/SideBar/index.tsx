@@ -10,9 +10,10 @@ interface SideBarProps {
     setIsOpenSales: React.Dispatch<React.SetStateAction<boolean>>;
     setIsOpenClients: React.Dispatch<React.SetStateAction<boolean>>;
     setIsOpenProducts: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsOpenFinanceControl: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function SideBar({ title, setIsOpenSales, setIsOpenClients, setIsOpenProducts }: SideBarProps) {
+export function SideBar({ title, setIsOpenSales, setIsOpenClients, setIsOpenProducts, setIsOpenFinanceControl }: SideBarProps) {
     // Estado para rastrear o botão ativo
     const [activeButton, setActiveButton] = useState<string | null>(null);
     const { openModalNewClient } = useModalNewClient();
@@ -24,6 +25,7 @@ export function SideBar({ title, setIsOpenSales, setIsOpenClients, setIsOpenProd
         console.log("Listando clientes...");
         setIsOpenSales(false);
         setIsOpenProducts(false);
+        setIsOpenFinanceControl(false);
         setIsOpenClients(true);
         setActiveButton("listClients");
     };
@@ -32,6 +34,7 @@ export function SideBar({ title, setIsOpenSales, setIsOpenClients, setIsOpenProd
         console.log("Listando produtos...");
         setIsOpenSales(false);
         setIsOpenClients(false);
+        setIsOpenFinanceControl(false);
         setIsOpenProducts(true);
         setActiveButton("listProducts");
     };
@@ -40,6 +43,7 @@ export function SideBar({ title, setIsOpenSales, setIsOpenClients, setIsOpenProd
         console.log("Listando vendas...");
         setIsOpenClients(false);
         setIsOpenProducts(false);
+        setIsOpenFinanceControl(false);
         setIsOpenSales(true);
         setActiveButton("listSales");
     };
@@ -47,7 +51,8 @@ export function SideBar({ title, setIsOpenSales, setIsOpenClients, setIsOpenProd
     const handleFinanceControl = () => {
         setIsOpenClients(false);
         setIsOpenProducts(false);
-        setIsOpenSales(false);
+        setIsOpenSales(false);  
+        setIsOpenFinanceControl(true);
         setActiveButton("financeControl");
     };
 
