@@ -10,25 +10,6 @@ import * as XLSX from 'xlsx';
 // Registro dos componentes do Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-interface Sale {
-  CO_ID: number;
-  DT_DATE: string;
-  CO_CLIENT: string;
-  CG_CITY: string;
-  CO_PRODUCT: string;
-  CD_QUANTITY: number;
-  VL_VALUE: number;
-  CO_SELLER: string;
-}
-
-interface Spent {
-  CO_ID: number;
-  DT_DATE: string;
-  VL_VALUE: number;
-  CO_DESCRIPTION: string;
-  CO_TYPE: string;
-}
-
 interface Transaction {
   CO_ID: number;
   DT_DATE: string;
@@ -46,36 +27,60 @@ export function FinanceControl() {
   const [selectedType, setSelectedType] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const [isChartMinimized, setIsChartMinimized] = useState<boolean>(false); // Novo estado para minimizar/maximizar o gráfico
+  const [isChartMinimized, setIsChartMinimized] = useState<boolean>(false);
 
   if (!isOpenFinanceControl) {
     return null;
   }
 
-  const extractMonth = (DT_DATE: string): string => DT_DATE.split("/")[1];
-  const formatDate = (DT_DATE: string): string => DT_DATE.split('/').reverse().join('-');
+  const extractMonth = (DT_DATE: string): string => DT_DATE.split("/")[1] || "";
 
+  const formatDate = (dateValue: string): string => {
+    // Verifica se já está no formato DD/MM/YYYY
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateValue)) {
+      return dateValue;
+    }
+
+    // Tenta converter a string para um objeto Date
+    const date = new Date(dateValue);
+
+    if (isNaN(date.getTime())) {
+      return "Data inválida";
+    }
+
+    // Extrai dia, mês e ano usando métodos UTC para evitar deslocamento de fuso
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // +1 porque meses começam em 0
+    const year = date.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  // Normaliza as datas para DD/MM/YYYY antes de processar
   const transactions: Transaction[] = [
     ...(tbSales || []).map((sale) => ({
       CO_ID: sale.CO_ID,
-      DT_DATE: sale.DT_DATE,
+      DT_DATE: formatDate(sale.DT_DATE),
       CO_TYPE: "Venda",
       CO_DESCRIPTION: `${sale.CO_CLIENT} - ${sale.CO_PRODUCT}`,
-      VL_VALUE: sale.VL_VALUE,
+      VL_VALUE: Number(sale.VL_VALUE) || 0,
     })),
     ...(tbSpents || []).map((spent) => ({
       CO_ID: spent.CO_ID,
-      DT_DATE: spent.DT_DATE,
+      DT_DATE: formatDate(spent.DT_DATE),
       CO_TYPE: "Gasto",
       CO_DESCRIPTION: spent.CO_DESCRIPTION,
-      VL_VALUE: -spent.VL_VALUE,
+      VL_VALUE: -Number(spent.VL_VALUE) || 0,
     })),
-  ].sort((a, b) => new Date(formatDate(a.DT_DATE)).getTime() - new Date(formatDate(b.DT_DATE)).getTime());
+  ].sort((a, b) => {
+    const dateA = new Date(a.DT_DATE.split('/').reverse().join('-')); // Converte DD/MM/YYYY para YYYY-MM-DD
+    const dateB = new Date(b.DT_DATE.split('/').reverse().join('-'));
+    return dateA.getTime() - dateB.getTime();
+  });
 
   const filteredTransactions = transactions.filter((t) => {
     const matchesMonth = selectedMonth ? extractMonth(t.DT_DATE) === selectedMonth : true;
     const matchesType = selectedType ? t.CO_TYPE === selectedType : true;
-    const date = new Date(formatDate(t.DT_DATE)).getTime();
+    const date = new Date(t.DT_DATE.split('/').reverse().join('-')).getTime(); // Converte para comparação
     const matchesStartDate = startDate ? date >= new Date(startDate).getTime() : true;
     const matchesEndDate = endDate ? date <= new Date(endDate).getTime() : true;
     return matchesMonth && matchesType && matchesStartDate && matchesEndDate;
@@ -169,16 +174,16 @@ export function FinanceControl() {
       <div className="summary">
         <div className="summary-item">
           <h3>Total Ganhos</h3>
-          <p style={{ color: 'green' }}>R$ {totalGains.toFixed(2)}</p>
+          <p style={{ color: 'green' }}>R$ {Number(totalGains).toFixed(2)}</p>
         </div>
         <div className="summary-item">
           <h3>Total Gastos</h3>
-          <p style={{ color: 'red' }}>R$ {totalExpenses.toFixed(2)}</p>
+          <p style={{ color: 'red' }}>R$ {Number(totalExpenses).toFixed(2)}</p>
         </div>
         <div className="summary-item">
           <h3>Saldo</h3>
           <p style={{ color: balance >= 0 ? 'green' : 'red' }}>
-            R$ {balance.toFixed(2)}
+            R$ {Number(balance).toFixed(2)}
           </p>
         </div>
       </div>
@@ -276,10 +281,10 @@ export function FinanceControl() {
 
       <div className="projection">
         <h3>Projeção para o Próximo Mês</h3>
-        <p>Média Mensal de Ganhos: R$ {monthlyAverageGain.toFixed(2)}</p>
-        <p>Média Mensal de Gastos: R$ {monthlyAverageExpense.toFixed(2)}</p>
+        <p>Média Mensal de Ganhos: R$ {Number(monthlyAverageGain).toFixed(2)}</p>
+        <p>Média Mensal de Gastos: R$ {Number(monthlyAverageExpense).toFixed(2)}</p>
         <p style={{ color: projectedBalanceNextMonth >= 0 ? 'green' : 'red' }}>
-          Saldo Projetado: R$ {projectedBalanceNextMonth.toFixed(2)}
+          Saldo Projetado: R$ {Number(projectedBalanceNextMonth).toFixed(2)}
         </p>
       </div>
 
@@ -304,10 +309,10 @@ export function FinanceControl() {
             {monthlyData.map((data) => (
               <tr key={data.month}>
                 <td>{data.month}</td>
-                <td style={{ color: 'green' }}>R$ {data.gains.toFixed(2)}</td>
-                <td style={{ color: 'red' }}>R$ {data.expenses.toFixed(2)}</td>
+                <td style={{ color: 'green' }}>R$ {Number(data.gains).toFixed(2)}</td>
+                <td style={{ color: 'red' }}>R$ {Number(data.expenses).toFixed(2)}</td>
                 <td style={{ color: data.balance >= 0 ? 'green' : 'red' }}>
-                  R$ {data.balance.toFixed(2)}
+                  R$ {Number(data.balance).toFixed(2)}
                 </td>
               </tr>
             ))}

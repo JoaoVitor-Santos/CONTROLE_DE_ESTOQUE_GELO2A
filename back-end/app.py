@@ -1,3 +1,37 @@
+import sys
+import subprocess
+import importlib
+
+# Lista de dependências necessárias
+DEPENDENCIES = ['flask', 'flask-cors', 'flask-mysqldb']
+
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+
+def check_dependencies():
+    missing = []
+    for package in DEPENDENCIES:
+        try:
+            importlib.import_module(package.replace('-', '_'))
+        except ImportError:
+            missing.append(package)
+
+    if missing:
+        print(f"Instalando dependências faltantes: {', '.join(missing)}")
+        for package in missing:
+            try:
+                install(package)
+            except subprocess.CalledProcessError as e:
+                print(f"Erro ao instalar {package}: {e}")
+                sys.exit(1)
+        print("Dependências instaladas com sucesso!")
+
+
+# Verifica e instala dependências antes de prosseguir
+check_dependencies()
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_mysqldb import MySQL
@@ -48,16 +82,31 @@ def test_db_connection():
 @app.route('/sales', methods=['GET'])
 def get_sales():
     try:
-        cursor = get_cursor()
-        cursor.execute("SELECT * FROM tb_sale")
-        sales = cursor.fetchall()
-        columns = [desc[0] for desc in cursor.description]
-        result = [dict(zip(columns, row)) for row in sales]
-        cursor.close()
-        return jsonify({'tbSales': result})
-    except Exception as e:
-        return jsonify({'error': f'Erro ao buscar vendas: {str(e)}'}), 500
+        print("Iniciando a busca de vendas no endpoint /sales")
 
+        cursor = get_cursor()
+        print("Cursor obtido com sucesso")
+
+        cursor.execute("SELECT * FROM tb_sale")
+        print("Consulta SQL executada: SELECT * FROM tb_sale")
+
+        sales = cursor.fetchall()
+        print(f"Dados brutos recuperados: {sales}")
+
+        columns = [desc[0] for desc in cursor.description]
+        print(f"Colunas da tabela: {columns}")
+
+        result = [dict(zip(columns, row)) for row in sales]
+        print(f"Resultado formatado como lista de dicionários: {result}")
+
+        cursor.close()
+        print("Cursor fechado")
+
+        return jsonify({'tbSales': result})
+
+    except Exception as e:
+        print(f"Erro ao buscar vendas: {str(e)}")
+        return jsonify({'error': f'Erro ao buscar vendas: {str(e)}'}), 500
 @app.route('/sales', methods=['POST'])
 def create_sale():
     try:

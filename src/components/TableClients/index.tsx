@@ -11,12 +11,12 @@ export function TableClients() {
         return null;
     }
 
+    // Função para formatar o saldo
     const formatBalance = (VL_BALANCE: number | string): string => {
-        // Converte VL_BALANCE para número, tratando possíveis strings
         const balanceNumber = typeof VL_BALANCE === "string" ? parseFloat(VL_BALANCE) : VL_BALANCE;
 
         if (isNaN(balanceNumber)) {
-            return "R$ 0.00"; // Caso a conversão falhe, retorna 0
+            return "R$ 0.00";
         }
 
         if (balanceNumber > 0) {
@@ -28,9 +28,26 @@ export function TableClients() {
         }
     };
 
+    // Função para formatar o telefone
+    const formatPhone = (phone: string | number): string => {
+        // Converte para string e remove caracteres não numéricos
+        const phoneStr = String(phone).replace(/\D/g, "");
+
+        // Verifica o tamanho do número para aplicar a máscara correta
+        if (phoneStr.length === 11) {
+            // Formato para celular com DDD: (XX) XXXXX-XXXX
+            return phoneStr.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+        } else if (phoneStr.length === 10) {
+            // Formato para telefone fixo com DDD: (XX) XXXX-XXXX
+            return phoneStr.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+        } else {
+            // Retorna o número sem formatação se não tiver o tamanho esperado
+            return phoneStr || "Telefone inválido";
+        }
+    };
+
     const filteredClients = tbClients.filter((client) => {
         const matchesCity = CG_CITY_FILTER ? client.CG_CITY === CG_CITY_FILTER : true;
-        // Converte VL_BALANCE para número no filtro também
         const balanceNumber = typeof client.VL_BALANCE === "string" ? parseFloat(client.VL_BALANCE) : client.VL_BALANCE;
         const matchesBalanceType =
             BALANCE_TYPE_FILTER === "positive"
@@ -94,7 +111,7 @@ export function TableClients() {
                         filteredClients.map((client) => (
                             <tr key={client.CO_ID}>
                                 <td>{client.CO_NAME}</td>
-                                <td>{client.CO_PHONE}</td>
+                                <td>{formatPhone(client.CO_PHONE)}</td> {/* Aplicando a máscara de telefone */}
                                 <td>{client.CG_ADDRESS}</td>
                                 <td>{client.CG_CITY}</td>
                                 <td>{formatBalance(client.VL_BALANCE)}</td>

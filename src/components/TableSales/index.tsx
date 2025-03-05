@@ -10,8 +10,36 @@ export function TableSales() {
     const [MONTH_FILTER, setMONTH_FILTER] = useState<string>("");
     const [CO_CLIENT_FILTER, setCO_CLIENT_FILTER] = useState<string>("");
 
+    // Função para extrair o mês
     const extractMonth = (DT_DATE: string): string => {
         return DT_DATE.split("/")[1];
+    };
+
+    // Função para formatar a data no padrão DD/MM/YYYY usando UTC
+    const formatDate = (dateValue: string): string => {
+        console.log("Data antes de formatar:", dateValue);
+
+        // Verifica se já está no formato DD/MM/YYYY
+        if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateValue)) {
+            console.log("Data depois de formatar (já formatada):", dateValue);
+            return dateValue;
+        }
+
+        // Tenta converter a string para um objeto Date
+        const date = new Date(dateValue);
+
+        if (isNaN(date.getTime())) {
+            console.log("Data depois de formatar (inválida):", "Data inválida");
+            return "Data inválida";
+        }
+
+        // Extrai dia, mês e ano usando métodos UTC para evitar deslocamento de fuso
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // +1 porque meses começam em 0
+        const year = date.getUTCFullYear();
+        const formattedDate = `${day}/${month}/${year}`;
+        console.log("Data depois de formatar:", formattedDate);
+        return formattedDate;
     };
 
     const filteredSales = tbSales.filter((sale) => {
@@ -120,7 +148,7 @@ export function TableSales() {
                     {filteredSales.length > 0 ? (
                         filteredSales.map((sale) => (
                             <tr key={sale.CO_ID}>
-                                <td>{sale.DT_DATE}</td>
+                                <td>{formatDate(sale.DT_DATE)}</td>
                                 <td>{sale.CO_CLIENT}</td>
                                 <td>{sale.CG_CITY}</td>
                                 <td>{sale.CO_PRODUCT}</td>
