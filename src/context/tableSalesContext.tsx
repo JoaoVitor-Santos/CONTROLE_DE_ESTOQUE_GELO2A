@@ -10,6 +10,7 @@ interface Sale {
   CD_QUANTITY: number;
   VL_VALUE: number;
   CO_SELLER: string;
+  VL_PAID: number; // Alterado de PAID para VL_PAID
 }
 
 type SaleEntry = Omit<Sale, "CO_ID">;

@@ -141,6 +141,7 @@ export function TableSales() {
                         <th>Produto</th>
                         <th>Quantidade</th>
                         <th>Valor</th>
+                        <th> Valor Pago</th>
                         <th>Vendedor</th>
                     </tr>
                 </thead>
@@ -154,6 +155,7 @@ export function TableSales() {
                                 <td>{sale.CO_PRODUCT}</td>
                                 <td>{sale.CD_QUANTITY}</td>
                                 <td>R$ {sale.VL_VALUE}</td>
+                                <td>R$ {sale.VL_PAID}</td>
                                 <td>{sale.CO_SELLER}</td>
                             </tr>
                         ))
