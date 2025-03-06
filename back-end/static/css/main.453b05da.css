@@ -606,7 +606,7 @@ tbody tr:last-child td {
     position: fixed;
     right: 0;
     top: 0;
-    z-index: 1000
+    z-index: 1999
 }
 
 .ReactModal__Content {
@@ -617,7 +617,8 @@ tbody tr:last-child td {
     max-width: 500px;
     padding: 20px;
     position: relative;
-    width: 90%
+    width: 90%;
+    z-index: 2000;
 }
 
 .modal-close {

@@ -30,7 +30,7 @@ export function ModalNewSale() {
     const [CD_QUANTITY, setCD_QUANTITY] = useState<number | "">("");
     const [VL_VALUE, setVL_VALUE] = useState<number | "">("");
     const [CO_SELLER, setCO_SELLER] = useState("");
-    const [PAYMENT_STATUS, setPAYMENT_STATUS] = useState<"none" | "partial" | "full">("none");
+    const [PAYMENT_STATUS, setPAYMENT_STATUS] = useState<"none" | "partial" | "full" | "over">("none");
     const [VL_PAID, setVL_PAID] = useState<number | "">("");
 
     const handleCreateSale = async () => {
@@ -39,16 +39,21 @@ export function ModalNewSale() {
             return;
         }
 
-        if (PAYMENT_STATUS === "partial" && (VL_PAID === "" || (typeof VL_PAID === "number" && (VL_PAID >= VL_VALUE! || VL_PAID <= 0)))) {
-            alert("Por favor, informe um valor pago válido (maior que 0 e menor que o valor total).");
+        if ((PAYMENT_STATUS === "partial" || PAYMENT_STATUS === "over") && 
+            (VL_PAID === "" || (typeof VL_PAID === "number" && VL_PAID <= 0))) {
+            alert("Por favor, informe um valor pago válido (maior que 0).");
+            return;
+        }
+
+        if (PAYMENT_STATUS === "over" && typeof VL_PAID === "number" && VL_PAID <= VL_VALUE!) {
+            alert("O valor pago deve ser maior que o valor total para 'Acima do valor'.");
             return;
         }
 
         try {
-            // Determina o valor pago com base no status
             const paidValue = PAYMENT_STATUS === "full" 
                 ? VL_VALUE as number 
-                : PAYMENT_STATUS === "partial" 
+                : (PAYMENT_STATUS === "partial" || PAYMENT_STATUS === "over") 
                 ? VL_PAID as number 
                 : 0;
 
@@ -187,14 +192,15 @@ export function ModalNewSale() {
                 <select
                     id="PAYMENT_STATUS"
                     value={PAYMENT_STATUS}
-                    onChange={(e) => setPAYMENT_STATUS(e.target.value as "none" | "partial" | "full")}
+                    onChange={(e) => setPAYMENT_STATUS(e.target.value as "none" | "partial" | "full" | "over")}
                 >
                     <option value="none">Não pago</option>
                     <option value="partial">Parcialmente pago</option>
                     <option value="full">Totalmente pago</option>
+                    <option value="over">Acima do valor</option>
                 </select>
 
-                {PAYMENT_STATUS === "partial" && (
+                {(PAYMENT_STATUS === "partial" || PAYMENT_STATUS === "over") && (
                     <>
                         <label htmlFor="VL_PAID">Valor Pago:</label>
                         <input
@@ -203,7 +209,6 @@ export function ModalNewSale() {
                             value={VL_PAID}
                             onChange={(e) => setVL_PAID(e.target.value === "" ? "" : Number(e.target.value))}
                             placeholder="Digite o valor pago"
-                            max={VL_VALUE || undefined}
                             min="0"
                         />
                     </>

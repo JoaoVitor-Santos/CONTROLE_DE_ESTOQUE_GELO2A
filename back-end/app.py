@@ -1,17 +1,21 @@
 import sys
+import os
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import text
 from datetime import datetime
 
 # Configuração do app
 app = Flask(__name__)
 
-# Configuração do SQLite
+# Configuração do SQLite com caminho dinâmico
 if getattr(sys, 'frozen', False):
-    # Caminho para o banco quando executável
-    db_path = f"sqlite:///{sys._MEIPASS}/projeto.db"
+    # Caminho para o diretório de trabalho atual (onde o executável está sendo executado)
+    base_path = os.path.dirname(sys.executable)
+    db_path = f"sqlite:///{os.path.join(base_path, 'projeto.db')}"
 else:
+    # Caminho relativo ao diretório atual quando rodando como script
     db_path = "sqlite:///projeto.db"
 
 app.config['SQLALCHEMY_DATABASE_URI'] = db_path
@@ -20,7 +24,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
 
-# Modelos das tabelas
+# Modelos das tabelas (sem alterações)
 class Sale(db.Model):
     __tablename__ = 'tb_sale'
     CO_ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -31,7 +35,7 @@ class Sale(db.Model):
     CD_QUANTITY = db.Column(db.Integer)
     VL_VALUE = db.Column(db.Float)
     CO_SELLER = db.Column(db.String(255))
-    VL_PAID = db.Column(db.Float, default=0.0)  # Adicionado VL_PAID
+    VL_PAID = db.Column(db.Float, default=0.0)
 
 class Client(db.Model):
     __tablename__ = 'tb_client'
@@ -62,12 +66,32 @@ class Spent(db.Model):
 with app.app_context():
     db.create_all()
 
+# Função para limpar todas as tabelas
+def clear_all_tables():
+    try:
+        with app.app_context():
+            db.session.query(Sale).delete()
+            db.session.query(Client).delete()
+            db.session.query(Product).delete()
+            db.session.query(Spent).delete()
+            db.session.execute(
+                text("CREATE TABLE IF NOT EXISTS sqlite_sequence (name TEXT, seq INTEGER);")
+            )
+            db.session.execute(
+                text("DELETE FROM sqlite_sequence WHERE name IN ('tb_sale', 'tb_client', 'tb_product', 'tb_spent');")
+            )
+            db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+        print(f"Erro ao limpar tabelas: {str(e)}")
+        return False
+
 # Rotas da API
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Rotas para Sales
 @app.route('/sales', methods=['GET'])
 def get_sales():
     sales = Sale.query.all()
@@ -79,17 +103,16 @@ def get_sales():
         'CO_PRODUCT': s.CO_PRODUCT,
         'CD_QUANTITY': s.CD_QUANTITY,
         'VL_VALUE': s.VL_VALUE,
-        'CO_SELLER': s.CO_SELLER
+        'CO_SELLER': s.CO_SELLER,
+        'VL_PAID': s.VL_PAID
     } for s in sales]
     return jsonify({'tbSales': result})
-
 
 @app.route('/sales', methods=['POST'])
 def create_sale():
     try:
         data = request.get_json()
-        vl_paid = data.get('VL_PAID', 0.0)  # Obtém o valor pago, default 0.0 se não enviado
-
+        vl_paid = data.get('VL_PAID', 0.0)
         dt_date = datetime.strptime(data['DT_DATE'], '%Y-%m-%d').date() if data['DT_DATE'] else None
         new_sale = Sale(
             DT_DATE=dt_date,
@@ -99,22 +122,18 @@ def create_sale():
             CD_QUANTITY=data['CD_QUANTITY'],
             VL_VALUE=data['VL_VALUE'],
             CO_SELLER=data['CO_SELLER'],
-            VL_PAID=vl_paid  # Atualizado para VL_PAID
+            VL_PAID=vl_paid
         )
-
-        # Calcula o valor não pago e diminui o saldo do cliente
-        remaining_value = data['VL_VALUE'] - vl_paid
-        if remaining_value > 0:  # Se há valor não pago
-            client = Client.query.filter_by(CO_NAME=data['CO_CLIENT']).first()
-            if client:
-                # Se VL_BALANCE for None, inicializa como 0
-                client.VL_BALANCE = client.VL_BALANCE or 0
-                # Subtrai apenas o valor não pago do saldo (pode ficar negativo)
-                client.VL_BALANCE -= remaining_value
-
+        difference = vl_paid - data['VL_VALUE']
+        client = Client.query.filter_by(CO_NAME=data['CO_CLIENT']).first()
+        if client:
+            client.VL_BALANCE = client.VL_BALANCE or 0
+            if difference < 0:
+                client.VL_BALANCE += difference
+            elif difference > 0:
+                client.VL_BALANCE += difference
         db.session.add(new_sale)
         db.session.commit()
-
         return jsonify({'sale': {
             'CO_ID': new_sale.CO_ID,
             'DT_DATE': new_sale.DT_DATE.strftime('%Y-%m-%d') if new_sale.DT_DATE else None,
@@ -124,12 +143,12 @@ def create_sale():
             'CD_QUANTITY': new_sale.CD_QUANTITY,
             'VL_VALUE': new_sale.VL_VALUE,
             'CO_SELLER': new_sale.CO_SELLER,
-            'VL_PAID': new_sale.VL_PAID  # Atualizado no retorno
+            'VL_PAID': new_sale.VL_PAID
         }}), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 400
-# Rotas para Clients
+
 @app.route('/clients', methods=['GET'])
 def get_clients():
     clients = Client.query.all()
@@ -164,7 +183,6 @@ def create_client():
         'VL_BALANCE': new_client.VL_BALANCE
     }}), 201
 
-# Rotas para Products
 @app.route('/products', methods=['GET'])
 def get_products():
     products = Product.query.all()
@@ -196,7 +214,6 @@ def create_product():
         'CO_DESCRIPTION': new_product.CO_DESCRIPTION
     }}), 201
 
-# Rotas para Spents
 @app.route('/spents', methods=['GET'])
 def get_spents():
     spents = Spent.query.all()
@@ -232,6 +249,12 @@ def create_spent():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-# Rodando o servidor
+@app.route('/clear_tables', methods=['POST'])
+def clear_tables_route():
+    if clear_all_tables():
+        return jsonify({'message': 'Todas as tabelas foram limpas com sucesso'}), 200
+    else:
+        return jsonify({'error': 'Erro ao limpar as tabelas'}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)
