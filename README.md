@@ -1,6 +1,3 @@
-Aqui está a descrição atualizada para o GitHub, ajustando a seção "Como Executar" para refletir as três formas de rodar o projeto: usando o executável empacotado, instalando as dependências e rodando o backend manualmente, ou rodando o backend e o frontend React juntos.
-
----
 
 **Controle de Estoque Gelo 2A**  
 Um sistema de gerenciamento de estoque e vendas desenvolvido para pequenas empresas. O backend, construído com Flask (Python) e SQLite, oferece uma API RESTful para gerenciar vendas, clientes, produtos e despesas, com suporte a pagamentos parciais ou acima do valor, ajustando automaticamente o saldo dos clientes. O frontend, em React, proporciona uma interface intuitiva, incluindo modais para registro de vendas. Empacotado como um executável standalone com PyInstaller para fácil distribuição.
