@@ -16,7 +16,6 @@ Um sistema de gerenciamento de estoque e vendas desenvolvido para pequenas empre
 - Backend: Flask, Flask-SQLAlchemy, Flask-Cors, SQLite
 - Frontend: React
 - Empacotamento: PyInstaller
-![image](https://github.com/user-attachments/assets/fd704119-0eac-48a0-be83-f041103e8e9e)
 
 **Estrutura**:
 - `static/`: Arquivos JS e imagens.
@@ -44,3 +43,26 @@ Um sistema de gerenciamento de estoque e vendas desenvolvido para pequenas empre
      - Instale as dependências: `npm install`
      - Inicie o React: `npm start`
    - Acesse: `http://localhost:3000/` (ou a porta padrão do React), com o backend rodando em `http://127.0.0.1:5000/` para as chamadas da API.
+  
+4. **Imagens**
+   - Novo Cliente
+     ![image](https://github.com/user-attachments/assets/0dddcef8-c30d-4182-b362-160ba2f59906)
+   - Novo Produto
+     ![image](https://github.com/user-attachments/assets/6fc7e1aa-da11-442c-844b-fcfb336d7776)
+   - Cadastrar Venda
+     ![image](https://github.com/user-attachments/assets/fb541950-e0c2-45fe-b7cb-7f28bb878aac)
+   - Cadastrar Despesa
+     ![image](https://github.com/user-attachments/assets/c02c398a-f675-480f-a01b-63f278b0520d)
+   - Tabela de Clientes
+     ![image](https://github.com/user-attachments/assets/d35472c2-cf96-44ae-b77f-1b5790cc0452)
+   - Tabela de Produtos
+     ![image](https://github.com/user-attachments/assets/ae032e2e-5aca-446a-bc1b-429e45f8cc88)
+   - Tabela de Vendas
+     ![image](https://github.com/user-attachments/assets/f2c9af6a-5e4c-4d29-9f9e-64772383349c)
+   - Tela de gestão (O gráfico só é criado a partir de gastos e/ou vendas em meses diferentes, somente dados fictícios para demonstração)
+     ![image](https://github.com/user-attachments/assets/13d38ab6-692d-4a75-a056-1b4062ebc2ef)
+     ![image](https://github.com/user-attachments/assets/e82e9d3d-b99c-427b-b116-19ac852922ce)
+
+
+ 
+
