@@ -16,6 +16,7 @@ Um sistema de gerenciamento de estoque e vendas desenvolvido para pequenas empre
 - Backend: Flask, Flask-SQLAlchemy, Flask-Cors, SQLite
 - Frontend: React
 - Empacotamento: PyInstaller
+![image](https://github.com/user-attachments/assets/fd704119-0eac-48a0-be83-f041103e8e9e)
 
 **Estrutura**:
 - `static/`: Arquivos JS e imagens.
