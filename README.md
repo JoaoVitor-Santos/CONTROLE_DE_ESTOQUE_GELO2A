@@ -27,7 +27,7 @@ Um sistema de gerenciamento de estoque e vendas desenvolvido para pequenas empre
    - Acesse: `http://127.0.0.1:5000/`.
 
 2. **Rodando o Backend Manualmente**:
-   - Clone o repositório: `git clone https://github.com/seu_usuario/controle-de-estoque-gelo2a.git`
+   - Clone o repositório: `git clone https://github.com/JoaoVitor-Santos/controle-de-estoque-gelo2a.git`
    - Entre no diretório: `cd controle-de-estoque-gelo2a/back-end`
    - Instale as dependências: `pip install -r requirements.txt`
    - Execute: `python app.py`
